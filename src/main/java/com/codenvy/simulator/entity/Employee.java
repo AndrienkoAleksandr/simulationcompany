@@ -1,0 +1,90 @@
+package com.codenvy.simulator.entity;
+
+import javax.persistence.*;
+import java.sql.Date;
+
+/**
+ * Created by Andrienko Aleksander on 16.03.14.
+ */
+@Entity
+@Table(name="Employees")
+public abstract class Employee {
+
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    @Column(name="data_of_birth")
+    private Date dataOfBirth;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+
+    @Column(name = "second_name")
+    private String secondName;
+
+    @Column(name = "salary")
+    private Double salary;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="id", referencedColumnName="id" ,insertable = false, updatable = false)
+    private Company company;
+
+    public Employee() {
+    }
+
+    protected Employee(Date dataOfBirth, String firstName, Double salary) {
+        this.dataOfBirth = dataOfBirth;
+        this.firstName = firstName;
+        this.salary = salary;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Date getDataOfBirth() {
+        return dataOfBirth;
+    }
+
+    public void setDataOfBirth(Date dataOfBirth) {
+        this.dataOfBirth = dataOfBirth;
+    }
+
+    public Double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+}
