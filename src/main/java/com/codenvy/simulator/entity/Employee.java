@@ -14,7 +14,7 @@ public abstract class Employee {
     @GeneratedValue
     private Integer id;
 
-    @Column(name="data_of_birth")
+    @Column(name="date_of_birth")
     private Date dataOfBirth;
 
     @Column(name = "first_name")
@@ -27,8 +27,11 @@ public abstract class Employee {
     @Column(name = "salary")
     private Double salary;
 
+    @Column(name = "company_id")
+    private Integer idCompany;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="id", referencedColumnName="id" ,insertable = false, updatable = false)
+    @JoinColumn(name="company_id", referencedColumnName="id" ,insertable = false, updatable = false)
     private Company company;
 
     public Employee() {
@@ -38,6 +41,14 @@ public abstract class Employee {
         this.dataOfBirth = dataOfBirth;
         this.firstName = firstName;
         this.salary = salary;
+    }
+
+    public Integer getIdCompany() {
+        return idCompany;
+    }
+
+    public void setIdCompany(Integer idCompany) {
+        this.idCompany = idCompany;
     }
 
     public Integer getId() {
