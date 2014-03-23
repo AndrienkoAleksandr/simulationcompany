@@ -4,6 +4,7 @@ import com.codenvy.simulator.constant.Constant;
 import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.entity.EmployeeWithFixedSalary;
 import com.codenvy.simulator.entity.EmployeeWithHourlyWages;
+import com.codenvy.simulator.entity.EnumEmployee;
 
 import java.util.ArrayList;
 import java.sql.Date;
@@ -31,26 +32,33 @@ public class RandomGenerator {
         List<Employee> employeeList = new ArrayList<Employee>();
         int amountEmployeeWithFixedSalary = generateRandomIntNumber(1, amount);
         int amountEmployeeWithHourlyWages = amount - amountEmployeeWithFixedSalary;
-        generateListSomeEmployees(employeeList, amountEmployeeWithFixedSalary, "EmployeeWithFixedSalary");
-        generateListSomeEmployees(employeeList, amountEmployeeWithHourlyWages, "EmployeeWithHourlyWages");
+        employeeList.addAll(generateListSomeEmployees(amountEmployeeWithFixedSalary, EnumEmployee.EmployeeWithFixedSalary));
+        employeeList.addAll(generateListSomeEmployees(amountEmployeeWithHourlyWages, EnumEmployee.EmployeeWithHourlyWages));
         return employeeList;
     }
 
-    public void generateListSomeEmployees(List<Employee> employeeList,int amountSomeEmployee, String className) {
+    public List<Employee> generateListSomeEmployees(int amountSomeEmployee, EnumEmployee className) {
+        amountSomeEmployee = Math.abs(amountSomeEmployee);
+        List<Employee> employees = new ArrayList<Employee>();
         for (int i = 0; i < amountSomeEmployee; i++) {
-            if (className.equals("EmployeeWithFixedSalary")) {
-                employeeList.add(i, new EmployeeWithFixedSalary());
-//                employeeList.get(i).setSalary(generateRandomDoubleNumber(Constant.MIN_FIXED_SALARY, Constant.MAX_FIXED_SALARY));
+            if (className.equals(EnumEmployee.EmployeeWithFixedSalary)) {
+                employees.add(i, new EmployeeWithFixedSalary());
+                setInitialParamsOfEmployee(employees.get(i));
             }
-            if (className.equals("EmployeeWithHourlyWages")) {
-                employeeList.add(i, new EmployeeWithHourlyWages());
-                ((EmployeeWithHourlyWages)employeeList.get(i))
+            if (className.equals(EnumEmployee.EmployeeWithHourlyWages)) {
+                employees.add(i, new EmployeeWithHourlyWages());
+                ((EmployeeWithHourlyWages)employees.get(i))
                         .calculationSalary(generateRandomDoubleNumber(Constant.MIN_WAGES_PER_HOUR, Constant.MAX_WAGES_PER_HOUR));
+                setInitialParamsOfEmployee(employees.get(i));
             }
-            employeeList.get(i).setFirstName(generateFirstName());
-            employeeList.get(i).setSecondName(generateSecondName());
-            employeeList.get(i).setDataOfBirth(generateRandomDate());
         }
+        return employees;
+    }
+
+    public void setInitialParamsOfEmployee(Employee employee) {
+        employee.setFirstName(generateFirstName());
+        employee.setSecondName(generateSecondName());
+        employee.setDataOfBirth(generateRandomDate());
     }
 
     private String generateFirstName() {
