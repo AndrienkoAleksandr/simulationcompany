@@ -1,9 +1,9 @@
 package com.codenvy.simulator.application;
 
 import com.codenvy.simulator.dao.CompanyDao;
-import com.codenvy.simulator.dao.CompanyDaoImpl;
 import com.codenvy.simulator.dao.EmployeeDao;
-import com.codenvy.simulator.dao.EmployeeDaoImpl;
+import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
+import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.generator.RandomGenerator;
@@ -16,12 +16,11 @@ import java.util.List;
  */
 public class Application {
 
-    private static EmployeeDao employeeDao = new EmployeeDaoImpl();
-    private static CompanyDao companyDao = new CompanyDaoImpl();
+    private static EmployeeDao employeeDao = new EmployeeDaoImplJDBC();
+    private static CompanyDao companyDao = new CompanyDaoImplJDBC();
 
     public static void main(String[] args) {
         HibernateUtil.getSessionFactory();
-        CompanyDao companyDao = new CompanyDaoImpl();
         System.out.println("Create new company with name \"Adidas\"");
         Company company = new Company();
         company.setFullName("Adidas");
@@ -47,8 +46,7 @@ public class Application {
         System.out.println("List of employee order by salary:");
         printEmployeeList(employeeDao.orderBySalary(company.getId()));
         System.out.println("List of employee order by second name:");
-        employeeDao.findEmployeeWithSecondName(company.getId());
-        printEmployeeList(employeeDao.orderBySalary(company.getId()));
+        printEmployeeList(employeeDao.orderBySecondName(company.getId()));
         System.out.println("Employee with first name Walt");
         printEmployeeList(employeeDao.findEmployeeWithFirstName("Walt", company.getId()));
         HibernateUtil.stopConnectionProvider();

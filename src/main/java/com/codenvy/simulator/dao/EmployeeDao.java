@@ -11,5 +11,5 @@ public interface EmployeeDao {
     public void save(Employee employee);
     public List<Employee> findEmployeeWithFirstName(String name, int idCompany);
     public List<Employee> orderBySalary(int idCompany);
-    public List<Employee> findEmployeeWithSecondName(int idCompany);
+    public List<Employee> orderBySecondName(int idCompany);
 }

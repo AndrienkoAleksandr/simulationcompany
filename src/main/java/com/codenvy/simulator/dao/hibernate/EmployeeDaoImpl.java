@@ -1,5 +1,6 @@
-package com.codenvy.simulator.dao;
+package com.codenvy.simulator.dao.hibernate;
 
+import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.util.HibernateUtil;
 import org.hibernate.Session;
@@ -14,7 +15,7 @@ import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 /**
  * Created by Andrienko Aleksander on 16.03.14.
  */
-public class EmployeeDaoImpl implements EmployeeDao{
+public class EmployeeDaoImpl implements EmployeeDao {
 
     private Session getSession() {
         return HibernateUtil.getSessionFactory().openSession();
@@ -84,7 +85,7 @@ public class EmployeeDaoImpl implements EmployeeDao{
     }
 
     @Override
-    public List<Employee> findEmployeeWithSecondName(int idCompany) {
+    public List<Employee> orderBySecondName(int idCompany) {
         Session session = null;
         List<Employee> employeeList = null;
         try {
