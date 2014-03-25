@@ -2,6 +2,8 @@ package com.codenvy.simulator.application;
 
 import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
+import com.codenvy.simulator.dao.hibernate.CompanyDaoImpl;
+import com.codenvy.simulator.dao.hibernate.EmployeeDaoImpl;
 import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
 import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
 import com.codenvy.simulator.entity.Company;
@@ -9,23 +11,45 @@ import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.generator.RandomGenerator;
 import com.codenvy.simulator.util.HibernateUtil;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 
 /**
  * Created by Andrienko Aleksander on 16.03.14.
  */
 public class Application {
-
-    private static EmployeeDao employeeDao = new EmployeeDaoImplJDBC();
-    private static CompanyDao companyDao = new CompanyDaoImplJDBC();
+    private static EmployeeDao employeeDao = null;
+    private static CompanyDao companyDao = null;
 
     public static void main(String[] args) {
-        HibernateUtil.getSessionFactory();
         System.out.println("Create new company with name \"Adidas\"");
         Company company = new Company();
         company.setFullName("Adidas");
+        int choice = 0;
+        do {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            try {
+                System.out.println("If you want save date with jdbc enter 1, with hibernate 2");
+                choice = Integer.parseInt(reader.readLine());
+                if (choice == 1) {
+                    employeeDao = new EmployeeDaoImplJDBC();
+                    companyDao = new CompanyDaoImplJDBC();
+                    break;
+                }
+                if (choice == 2) {
+                    HibernateUtil.getSessionFactory();
+                    employeeDao = new EmployeeDaoImpl();
+                    companyDao = new CompanyDaoImpl();
+                    break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("You must enter only digit");
+            }
+        } while (true);
         RandomGenerator generator = new RandomGenerator();
-
         System.out.println("Generate personal company");
         int amountOfEmployee = generator.generateAmountOfEmployee();
         System.out.println("Personal company consist of " + amountOfEmployee + " employees");
@@ -49,7 +73,9 @@ public class Application {
         printEmployeeList(employeeDao.orderBySecondName(company.getId()));
         System.out.println("Employee with first name Walt");
         printEmployeeList(employeeDao.findEmployeeWithFirstName("Walt", company.getId()));
-        HibernateUtil.stopConnectionProvider();
+        if (choice == 2) {
+            HibernateUtil.stopConnectionProvider();
+        }
     }
 
     private static void saveAllEmployees(List<Employee> employeeList, int idCompany) {
