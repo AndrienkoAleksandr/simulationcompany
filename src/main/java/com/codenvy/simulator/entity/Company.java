@@ -26,6 +26,9 @@ public class Company {
     @Column(name = "profit")
     private Double profit;
 
+    @Transient
+    private RandomGenerator generator = new RandomGenerator();
+
     public Company() {
     }
 
@@ -66,14 +69,22 @@ public class Company {
         this.profit = profit;
     }
 
-    public double earnedMoney(int amountOfEmployee) {
+    public List<Employee> takeEmployeesOnWork() {
+        System.out.println("Generate personal company");
+        int amountOfEmployee = generator.generateAmountOfEmployee();
+        System.out.println("Personal company consist of " + amountOfEmployee + " employees");
+        return employees = generator.generateListAllEmployees(amountOfEmployee);
+    }
+    
+
+    public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
-        return profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * amountOfEmployee);
+        return profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
     }
 
-    public void paySalaryStaff(List<Employee> employeeList) {
+    public void paySalaryStaff() {
         RandomGenerator salaryRandom = new RandomGenerator();
-        for (Employee employee: employeeList) {
+        for (Employee employee: employees) {
             double salary = 0;
             Class myClass = employee.getClass();
             String nameClass = myClass.getSimpleName();

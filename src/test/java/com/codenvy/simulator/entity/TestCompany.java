@@ -20,26 +20,29 @@ public class TestCompany {
 
     Company company = null;
     List<Employee> employees = null;
+    int testAmountEmployee;
 
     @Before
     public void setupTestCompany() {
         company = new Company();
         employees = new ArrayList<Employee>();
+        for (int i = 0; i < testAmountEmployee; i++) {
+            employees.add(new EmployeeWithFixedSalary());
+        }
+        company.setEmployees(employees);
     }
 
     @Test
     public void testEarnedMoney() {
-        int amountEmployee = 10;
-        int amountEmployeeNegative = -10;
-        assertTrue(company.earnedMoney(amountEmployee) <= Constant.MAX_FIXED_SALARY * Math.abs(amountEmployee));
-        assertTrue(company.earnedMoney(amountEmployeeNegative) <= Constant.MAX_FIXED_SALARY * Math.abs(amountEmployeeNegative));
+        int amountEmployee = testAmountEmployee;
+        double earnedMoney = company.earnMoney();
+        assertTrue(earnedMoney <= Constant.MAX_FIXED_SALARY * amountEmployee);
     }
 
     @Test
     public void testPaySalaryStaffWithPositiveProfit() {
-        employees = generateEmployee();
         company.setProfit(100000.0);
-        company.paySalaryStaff(employees);
+        company.paySalaryStaff();
         for(Employee employee: employees){
             assertNotNull(employee);
             assertTrue(employee.getSalary() > 0);
@@ -48,21 +51,13 @@ public class TestCompany {
 
     @Test
     public void testPaySalaryStaffWithNegativeProfit() {
-        employees = generateEmployee();
+        company.takeEmployeesOnWork();
         company.setProfit(-100000.0);
-        company.paySalaryStaff(employees);
+        company.paySalaryStaff();
         for(Employee employee: employees){
             assertNotNull(employee);
-            assertTrue(employee.getSalary() > 0);
+            assertTrue(employee.getSalary() >= 0);
         }
-    }
-
-    private List<Employee> generateEmployee() {
-        for(int i = 0; i < 5; i++) {
-            employees.add(new EmployeeWithFixedSalary());
-            employees.add(new EmployeeWithHourlyWages());
-        }
-        return employees;
     }
 
     @After

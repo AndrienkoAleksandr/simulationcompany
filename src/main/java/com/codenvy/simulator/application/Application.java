@@ -8,7 +8,6 @@ import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
 import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.entity.Employee;
-import com.codenvy.simulator.generator.RandomGenerator;
 import com.codenvy.simulator.util.HibernateUtil;
 
 import java.io.BufferedReader;
@@ -49,16 +48,15 @@ public class Application {
                 System.out.println("You must enter only digit");
             }
         } while (true);
-        RandomGenerator generator = new RandomGenerator();
-        System.out.println("Generate personal company");
-        int amountOfEmployee = generator.generateAmountOfEmployee();
-        System.out.println("Personal company consist of " + amountOfEmployee + " employees");
-        List<Employee> employeeList = generator.generateListAllEmployees(amountOfEmployee);
+        List<Employee> employeeList = company.takeEmployeesOnWork();
         printEmployeeList(employeeList);
-        company.setProfit(company.earnedMoney(amountOfEmployee));
+        company.setProfit(company.earnMoney());
+
         System.out.println("The company earned: " + company.getProfit() + "!!!");
         System.out.println("The company must to pay staff salaries");
-        company.paySalaryStaff(employeeList);
+
+        company.paySalaryStaff();
+
         System.out.println("finance status company after payment salary: profit = " + company.getProfit());
         if (company.getProfit() < 0) {
             System.out.println("Ops, the company had a loss!!!");
