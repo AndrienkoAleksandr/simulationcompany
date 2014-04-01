@@ -5,6 +5,8 @@ import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.entity.EmployeeWithFixedSalary;
 import com.codenvy.simulator.entity.EmployeeWithHourlyWages;
 import com.codenvy.simulator.entity.EnumEmployee;
+import com.codenvy.simulator.entity.factory.FactoryEmployeeFixedSalary;
+import com.codenvy.simulator.entity.factory.FactoryEmployeeHourlyWages;
 
 import java.util.ArrayList;
 import java.sql.Date;
@@ -42,11 +44,11 @@ public class RandomGenerator {
         List<Employee> employees = new ArrayList<Employee>();
         for (int i = 0; i < amountSomeEmployee; i++) {
             if (className.equals(EnumEmployee.EmployeeWithFixedSalary)) {
-                employees.add(i, new EmployeeWithFixedSalary());
+                employees.add(i, new FactoryEmployeeFixedSalary().create());
                 setInitialParamsOfEmployee(employees.get(i));
             }
             if (className.equals(EnumEmployee.EmployeeWithHourlyWages)) {
-                employees.add(i, new EmployeeWithHourlyWages());
+                employees.add(i, new FactoryEmployeeHourlyWages().create());
                 ((EmployeeWithHourlyWages)employees.get(i))
                         .calculationSalary(generateRandomDoubleNumber(Constant.MIN_WAGES_PER_HOUR, Constant.MAX_WAGES_PER_HOUR));
                 setInitialParamsOfEmployee(employees.get(i));
