@@ -18,7 +18,7 @@ public class CompanyDaoImpl implements CompanyDao {
 
     @Override
     public void saveOrUpdate(Company company) {
-        Session session =null;
+        Session session = null;
         int id = 0;
         try {
             session = getSession();

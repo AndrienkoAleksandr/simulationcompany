@@ -13,20 +13,40 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.Integer.compare;
+import static java.lang.Double.compare;
+
 /**
  * Created Andrienko Aleksander on 17.03.14.
  */
 public class RandomGenerator {
+
+    public RandomGenerator() {
+    }
 
     public int generateAmountOfEmployee() {
         return generateRandomIntNumber(1, Constant.MAX_AMOUNT_EMPLOYEE);
     }
 
     public int generateRandomIntNumber(int numberMin, int numberMax) {
+        int result = compare(numberMax, numberMin);
+        switch (result) {
+            case 0:
+                return numberMin;
+            case -1:
+                return (new Random()).nextInt(numberMin - numberMax) + numberMax;
+        }
         return (new Random()).nextInt(numberMax - numberMin) + numberMin;
     }
 
     public double generateRandomDoubleNumber(double numberMin, double numberMax) {
+        int result = compare(numberMax, numberMin);
+        switch (result) {
+            case 0:
+                return numberMin;
+            case -1:
+                return (new Random()).nextDouble() * (numberMin - numberMax) + numberMax;
+        }
         return (new Random()).nextDouble() * (numberMax - numberMin) + numberMin;
     }
 

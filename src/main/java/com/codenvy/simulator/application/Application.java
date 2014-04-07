@@ -16,9 +16,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 /**
- * Created by Andrienko Aleksander on 16.03.14.
+ * Created by first on 06.04.14.
  */
 public class Application {
+
     private static EmployeeDao employeeDao = null;
     private static CompanyDao companyDao = null;
 
@@ -26,28 +27,7 @@ public class Application {
         System.out.println("Create new company with name \"Adidas\"");
         Company company = new Company();
         company.setFullName("Adidas");
-        int choice = 0;
-        do {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            try {
-                System.out.println("If you want save date with jdbc enter 1, with hibernate 2");
-                choice = Integer.parseInt(reader.readLine());
-                if (choice == 1) {
-                    employeeDao = new EmployeeDaoImplJDBC();
-                    companyDao = new CompanyDaoImplJDBC();
-                    break;
-                }
-                if (choice == 2) {
-                    HibernateUtil.getSessionFactory();
-                    employeeDao = new EmployeeDaoImpl();
-                    companyDao = new CompanyDaoImpl();
-                    break;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("You must enter only digit");
-            }
-        } while (true);
+        int choice = getUserChoiceOfDataStorage();
         List<Employee> employeeList = company.takeEmployeesOnWork();
         printEmployeeList(employeeList);
         company.setProfit(company.earnMoney());
@@ -75,7 +55,6 @@ public class Application {
             HibernateUtil.stopConnectionProvider();
         }
     }
-
     private static void saveAllEmployees(List<Employee> employeeList, int idCompany) {
         for (Employee employee: employeeList) {
             employee.setIdCompany(idCompany);
@@ -95,5 +74,32 @@ public class Application {
             System.out.println(employeeInfo);
         }
         System.out.println("-----------------------");
+    }
+
+
+    public static int getUserChoiceOfDataStorage() {
+        int choice = 0;
+        do {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            try {
+            System.out.println("If you want save date with jdbc enter 1, with hibernate 2");
+            choice = Integer.parseInt(reader.readLine());
+            if (choice == 1) {
+                employeeDao = new EmployeeDaoImplJDBC();
+                companyDao = new CompanyDaoImplJDBC();
+                break;
+            }
+            if (choice == 2) {
+                HibernateUtil.getSessionFactory();
+                employeeDao = new EmployeeDaoImpl();
+                companyDao = new CompanyDaoImpl();
+                break;
+            }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("You must enter only digit");
+            }
+        } while (true);
+        return choice;
     }
 }

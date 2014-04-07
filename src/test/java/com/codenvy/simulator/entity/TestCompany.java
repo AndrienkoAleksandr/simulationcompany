@@ -34,7 +34,7 @@ public class TestCompany {
 
     @Test
     public void testEarnedMoney() {
-        int amountEmployee = testAmountEmployee;
+        int amountEmployee = 10;
         double earnedMoney = company.earnMoney();
         assertTrue(earnedMoney <= Constant.MAX_FIXED_SALARY * amountEmployee);
     }

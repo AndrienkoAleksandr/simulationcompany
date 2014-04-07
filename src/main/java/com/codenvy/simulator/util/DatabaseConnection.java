@@ -14,7 +14,7 @@ public class DatabaseConnection {
     private static final String BASE_DATE_NAME = "simulator";
     private static final String URL = "jdbc:mysql://localhost:3306/" + BASE_DATE_NAME;
     private static final String USER_NAME = "root";
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "1234";
 
     public static Connection getConnection()    {
         try {
