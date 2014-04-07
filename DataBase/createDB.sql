@@ -6,7 +6,7 @@ CREATE SCHEMA IF NOT EXISTS `simulator` DEFAULT CHARACTER SET latin1 COLLATE lat
 USE `simulator` ;
 
 -- -----------------------------------------------------
--- Table `simulator`.`Company`
+-- Table `simulator`.`CompanySingleton`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `simulator`.`Company` (
   `id` INT NOT NULL AUTO_INCREMENT ,

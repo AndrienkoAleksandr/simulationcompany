@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="Company")
-public class Company {
+public class CompanySingleton {
 
     @Id
     @GeneratedValue
@@ -29,12 +29,15 @@ public class Company {
     @Transient
     private RandomGenerator generator = new RandomGenerator();
 
-    public Company() {
+    private CompanySingleton() {
     }
 
-    public Company(String fullName, List<Employee> employees) {
-        this.fullName = fullName;
-        this.employees = employees;
+    private static class SingletonHolder {
+        private static final CompanySingleton company = new CompanySingleton();
+    }
+
+    public static CompanySingleton getInstance() {
+        return SingletonHolder.company;
     }
 
     public Integer getId() {
