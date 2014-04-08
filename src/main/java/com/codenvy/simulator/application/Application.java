@@ -11,12 +11,11 @@ import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.util.HibernateUtil;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
 /**
- * Created by first on 06.04.14.
+ * Created by Andrienko Aleksander on 06.04.14.
  */
 public class Application {
 
@@ -95,10 +94,10 @@ public class Application {
                     companyDao = new CompanyDaoImpl();
                     break;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("You must enter only digit");
+            } catch (Exception e) {
+                System.out.println("Error input!");
             }
+            System.out.println("You must enter only digit only 1 or 2");
         } while (true);
         return choice;
     }

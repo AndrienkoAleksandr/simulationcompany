@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by first on 24.03.14.
+ * Created by Andrienko Aleksander on 24.03.14.
  */
 public class EmployeeDaoImplJDBC  implements EmployeeDao {
 
