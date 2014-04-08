@@ -4,7 +4,7 @@ import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.entity.EmployeeWithFixedSalary;
 
 /**
- * Created by first on 01.04.14.
+ * Created by Andrienko Aleksanderon 01.04.14.
  */
 public class FactoryEmployeeFixedSalary implements FactoryEmployee {
 

@@ -1,6 +1,8 @@
 package com.codenvy.simulator.entity;
 
 import com.codenvy.simulator.constant.Constant;
+import com.codenvy.simulator.dao.hibernate.CompanyDaoImpl;
+import com.codenvy.simulator.dao.hibernate.EmployeeDaoImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,19 +14,19 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- * User: Andrienko Aleksander
- * Date: 23.03.14
- * Time: 14:02
- */
+* User: Andrienko Aleksander
+* Date: 23.03.14
+* Time: 14:02
+*/
 public class TestCompany {
 
-    CompanySingleton companySingleton = null;
+    Company companySingleton = null;
     List<Employee> employees = null;
     int testAmountEmployee;
 
     @Before
     public void setupTestCompany() {
-        companySingleton = CompanySingleton.getInstance();
+        companySingleton = new Company(new EmployeeDaoImpl(), new CompanyDaoImpl());
         employees = new ArrayList<Employee>();
         for (int i = 0; i < testAmountEmployee; i++) {
             employees.add(new EmployeeWithFixedSalary());

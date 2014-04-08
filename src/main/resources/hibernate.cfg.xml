@@ -13,7 +13,7 @@
         <property name="hibernate.connection.password">1234</property>
         <property name="show_sql">false</property>
 
-        <mapping class="com.codenvy.simulator.entity.CompanySingleton" />
+        <mapping class="com.codenvy.simulator.entity.Company" />
         <mapping class="com.codenvy.simulator.entity.EmployeeWithFixedSalary" />
         <mapping class="com.codenvy.simulator.entity.EmployeeWithHourlyWages" />
         <mapping class="com.codenvy.simulator.entity.Employee" />

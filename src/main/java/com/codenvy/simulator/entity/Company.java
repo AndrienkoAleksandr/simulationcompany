@@ -1,7 +1,10 @@
 package com.codenvy.simulator.entity;
 
 import com.codenvy.simulator.constant.Constant;
+import com.codenvy.simulator.dao.CompanyDao;
+import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.generator.RandomGenerator;
+import com.google.inject.Inject;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="Company")
-public class CompanySingleton {
+public class Company {
 
     @Id
     @GeneratedValue
@@ -29,15 +32,18 @@ public class CompanySingleton {
     @Transient
     private RandomGenerator generator = new RandomGenerator();
 
-    private CompanySingleton() {
-    }
+    @Transient
+     private EmployeeDao employeeDao;
 
-    private static class SingletonHolder {
-        private static final CompanySingleton company = new CompanySingleton();
-    }
+    @Transient
+    private CompanyDao companyDao;
 
-    public static CompanySingleton getInstance() {
-        return SingletonHolder.company;
+    public Company() {}
+
+    @Inject
+    public Company(EmployeeDao employeeDao, CompanyDao companyDao) {
+        this.employeeDao = employeeDao;
+        this.companyDao = companyDao;
     }
 
     public Integer getId() {
@@ -61,7 +67,9 @@ public class CompanySingleton {
     }
 
     public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+        if (employees != null) {
+            this.employees = employees;
+        }
     }
 
     public Double getProfit() {
@@ -72,13 +80,32 @@ public class CompanySingleton {
         this.profit = profit;
     }
 
+    public RandomGenerator getGenerator() {
+        return generator;
+    }
+
+    public void setGenerator(RandomGenerator generator) {
+        this.generator = generator;
+    }
+
     public List<Employee> takeEmployeesOnWork() {
         System.out.println("Generate personal company");
         int amountOfEmployee = generator.generateAmountOfEmployee();
         System.out.println("Personal company consist of " + amountOfEmployee + " employees");
-        return employees = generator.generateListAllEmployees(amountOfEmployee);
+        employees = generator.generateListAllEmployees(amountOfEmployee);
+        return employees;
     }
-    
+
+    public void saveCompanyToStorage() {
+        companyDao.saveOrUpdate(this);
+    }
+
+    public void saveEmployeeListToStorage(int idCompany) {
+        for (Employee employee: employees) {
+            employee.setIdCompany(idCompany);
+            employeeDao.save(employee);
+        }
+    }
 
     public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
