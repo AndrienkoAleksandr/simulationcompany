@@ -2,12 +2,15 @@ package com.codenvy.simulator.application;
 
 import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
-import com.codenvy.simulator.dao.hibernate.CompanyDaoImpl;
-import com.codenvy.simulator.dao.hibernate.EmployeeDaoImpl;
+import com.codenvy.simulator.dao.file.CompanyDaoImplFile;
+import com.codenvy.simulator.dao.file.EmployeeDaoImplFile;
+import com.codenvy.simulator.dao.hibernate.CompanyDaoImplHibernate;
+import com.codenvy.simulator.dao.hibernate.EmployeeDaoImplHibernate;
 import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
 import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.entity.Employee;
+import com.codenvy.simulator.module.FileModule;
 import com.codenvy.simulator.module.HibernateModule;
 import com.codenvy.simulator.module.JDBCModule;
 import com.codenvy.simulator.util.HibernateUtil;
@@ -15,7 +18,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -54,7 +56,7 @@ public class Application {
         System.out.println("List of employee order by second name:");
         printEmployeeList(employeeDao.orderBySecondName(company.getId()));
         System.out.println("Employee with first name Walt");
-        printEmployeeList(employeeDao.findEmployeeWithFirstName("Walt", company.getId()));
+        printEmployeeList(employeeDao.findEmployeesWithFirstName("Walt", company.getId()));
         if (choice == 2) {
             HibernateUtil.stopConnectionProvider();
         }
@@ -80,7 +82,9 @@ public class Application {
         do {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
-                System.out.println("If you want save date with jdbc enter 1, with hibernate 2");
+                System.out.println("If you want save date with jdbc enter 1," +
+                        "\nwith hibernate enter 2" +
+                        "\nwith file enter 3");
                 choice = Integer.parseInt(reader.readLine());
                 if (choice == 1) {
                     employeeDao = new EmployeeDaoImplJDBC();
@@ -91,9 +95,16 @@ public class Application {
                 }
                 if (choice == 2) {
                     HibernateUtil.getSessionFactory();
-                    employeeDao = new EmployeeDaoImpl();
-                    companyDao = new CompanyDaoImpl();
+                    employeeDao = new EmployeeDaoImplHibernate();
+                    companyDao = new CompanyDaoImplHibernate();
                     Injector injector = Guice.createInjector(new HibernateModule());
+                    company = injector.getInstance(Company.class);
+                    break;
+                }
+                if (choice == 3) {
+                    employeeDao = new EmployeeDaoImplFile();
+                    companyDao = new CompanyDaoImplFile();
+                    Injector injector = Guice.createInjector(new FileModule());
                     company = injector.getInstance(Company.class);
                     break;
                 }

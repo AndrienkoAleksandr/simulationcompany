@@ -2,9 +2,8 @@ package com.codenvy.simulator.module;
 
 import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
-import com.codenvy.simulator.dao.hibernate.CompanyDaoImpl;
-import com.codenvy.simulator.dao.hibernate.EmployeeDaoImpl;
-import com.codenvy.simulator.entity.Employee;
+import com.codenvy.simulator.dao.hibernate.CompanyDaoImplHibernate;
+import com.codenvy.simulator.dao.hibernate.EmployeeDaoImplHibernate;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
@@ -14,7 +13,7 @@ import com.google.inject.Module;
 public class HibernateModule implements Module{
     @Override
     public void configure(Binder binder) {
-        binder.bind(EmployeeDao.class).to(EmployeeDaoImpl.class);
-        binder.bind(CompanyDao.class).to(CompanyDaoImpl.class);
+        binder.bind(EmployeeDao.class).to(EmployeeDaoImplHibernate.class);
+        binder.bind(CompanyDao.class).to(CompanyDaoImplHibernate.class);
     }
 }

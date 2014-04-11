@@ -1,8 +1,8 @@
 package com.codenvy.simulator.entity;
 
 import com.codenvy.simulator.constant.Constant;
-import com.codenvy.simulator.dao.hibernate.CompanyDaoImpl;
-import com.codenvy.simulator.dao.hibernate.EmployeeDaoImpl;
+import com.codenvy.simulator.dao.hibernate.CompanyDaoImplHibernate;
+import com.codenvy.simulator.dao.hibernate.EmployeeDaoImplHibernate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class TestCompany {
 
     @Before
     public void setupTestCompany() {
-        companySingleton = new Company(new EmployeeDaoImpl(), new CompanyDaoImpl());
+        companySingleton = new Company(new EmployeeDaoImplHibernate(), new CompanyDaoImplHibernate());
         employees = new ArrayList<Employee>();
         for (int i = 0; i < testAmountEmployee; i++) {
             employees.add(new EmployeeWithFixedSalary());

@@ -17,22 +17,41 @@ import java.util.List;
 public class EmployeeDaoImplJDBC  implements EmployeeDao {
 
     @Override
-    public void save(Employee employee) {
-        Connection connection = DatabaseConnection.getConnection();
-        String sql = "INSERT INTO " +
-                "Employees(date_of_birth, first_name, second_name, salary, Company_id, dtype)" +
-                " values (?, ?, ?, ?, ?, ?) ";
+    public void saveOrUpdate(Employee employee) {
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
+            connection = DatabaseConnection.getConnection();
+            String sql = "INSERT INTO Employees" +
+                    "(id, date_of_birth, first_name, second_name, salary, Company_id, dtype)" +
+                    " values (?, ?, ?, ?, ?, ?, ?) " +
+                    "ON DUPLICATE KEY UPDATE " +
+                    "date_of_birth = ?, first_name = ?,  second_name = ?," +
+                    "salary = ?, Company_id = ?, dtype = ?";
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setDate(1, employee.getDataOfBirth());
-            preparedStatement.setString(2, employee.getFirstName());
-            preparedStatement.setString(3, employee.getSecondName());
-            preparedStatement.setDouble(4, employee.getSalary());
-            preparedStatement.setDouble(5, employee.getIdCompany());
+            if (employee.getId() == null) {
+                preparedStatement.setString(1, null);
+            } else {
+                preparedStatement.setInt(1, employee.getId());
+            }
+            preparedStatement.setDate(2, employee.getDataOfBirth());
+            preparedStatement.setString(3, employee.getFirstName());
+            preparedStatement.setString(4, employee.getSecondName());
+            preparedStatement.setDouble(5, employee.getSalary());
+            if (employee.getIdCompany() != null) {
+                preparedStatement.setDouble(6, employee.getIdCompany());
+            } else {
+                throw new IllegalArgumentException("company_id can't be null!!!");
+            }
             Class newClass = employee.getClass();
             String typeEmployee = newClass.getSimpleName();
-            preparedStatement.setString(6, typeEmployee);
+            preparedStatement.setString(7, typeEmployee);
+            preparedStatement.setDate(8, employee.getDataOfBirth());
+            preparedStatement.setString(9, employee.getFirstName());
+            preparedStatement.setString(10, employee.getSecondName());
+            preparedStatement.setDouble(11, employee.getSalary());
+            preparedStatement.setDouble(12, employee.getIdCompany());
+            preparedStatement.setString(13, typeEmployee);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,7 +60,30 @@ public class EmployeeDaoImplJDBC  implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> findEmployeeWithFirstName(String name, int idCompany) {
+    public void delete(Employee employee) {
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            String sql = "DELETE FROM Employees WHERE id = ? and Company_id =?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, employee.getId());
+            preparedStatement.setInt(2, employee.getIdCompany());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public List<Employee> findEmployeesWithFirstName(String name, int idCompany) {
         Connection connection = DatabaseConnection.getConnection();
         String sql = "SELECT * FROM Employees WHERE first_name = ? AND Company_id = ?";
         PreparedStatement statement = null;

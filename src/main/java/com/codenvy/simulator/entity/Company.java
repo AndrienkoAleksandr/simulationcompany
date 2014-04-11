@@ -103,7 +103,7 @@ public class Company {
     public void saveEmployeeListToStorage(int idCompany) {
         for (Employee employee: employees) {
             employee.setIdCompany(idCompany);
-            employeeDao.save(employee);
+            employeeDao.saveOrUpdate(employee);
         }
     }
 

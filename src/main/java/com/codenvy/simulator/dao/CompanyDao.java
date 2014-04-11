@@ -7,4 +7,5 @@ import com.codenvy.simulator.entity.Company;
  */
 public interface CompanyDao {
     public void saveOrUpdate(Company company);
+    public void deleteFromId(Company company);
 }

@@ -16,6 +16,10 @@ public abstract class Constant {
             "Archibald", "Arnold", "Arthurs", "Atcheson", "Attwood",
             "Audley", "Austin", "Ayrton", "Babcock", "Backer"};
 
+    public static final String pathToCompanyFile = "storage/company.bin";
+
+    public static final String pathToEmployeeFile = "storage/employee.bin";
+
     /* Integer */
     public static final Integer FIRST_NAME_LIST_LENGTH = FIRST_NAME_LIST.length;
 
