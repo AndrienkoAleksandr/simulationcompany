@@ -1,7 +1,7 @@
 package com.codenvy.simulator.dao.hibernate;
 
 import com.codenvy.simulator.dao.CompanyDao;
-import com.codenvy.simulator.entity.CompanySingleton;
+import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.util.HibernateUtil;
 import org.hibernate.Session;
 
@@ -17,13 +17,30 @@ public class CompanyDaoImpl implements CompanyDao {
     }
 
     @Override
-    public void saveOrUpdate(CompanySingleton companySingleton) {
+    public void saveOrUpdate(Company company) {
         Session session = null;
         int id = 0;
         try {
             session = getSession();
             session.beginTransaction();
-            session.saveOrUpdate(companySingleton);
+            session.saveOrUpdate(company);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
+
+    @Override
+    public void deleteFromId(Company company) {
+        Session session =null;
+        try {
+            session = getSession();
+            session.beginTransaction();
+            session.delete(company);
             session.getTransaction().commit();
         } catch (Exception e) {
             printStackTrace();

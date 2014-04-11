@@ -22,7 +22,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public void save(Employee employee) {
+    public void saveOrUpdate(Employee employee) {
         Session session = null;
         try {
             session = getSession();
@@ -38,10 +38,25 @@ public class EmployeeDaoImpl implements EmployeeDao {
         }
     }
 
-
+    @Override
+    public void delete(Employee employee) {
+        Session session = null;
+        try {
+            session = getSession();
+            session.beginTransaction();
+            session.save(employee);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+    }
 
     @Override
-    public List<Employee> findEmployeeWithFirstName(String name, int idCompany) {
+    public List<Employee> findEmployeesWithFirstName(String name, int idCompany) {
         Session session = null;
         List<Employee> employeeList = null;
         try {

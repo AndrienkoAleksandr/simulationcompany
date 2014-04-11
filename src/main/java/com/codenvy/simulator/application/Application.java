@@ -2,11 +2,13 @@ package com.codenvy.simulator.application;
 
 import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
+import com.codenvy.simulator.dao.file.CompanyDaoImplFile;
+import com.codenvy.simulator.dao.file.EmployeeDaoImplFile;
 import com.codenvy.simulator.dao.hibernate.CompanyDaoImpl;
 import com.codenvy.simulator.dao.hibernate.EmployeeDaoImpl;
 import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
 import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
-import com.codenvy.simulator.entity.CompanySingleton;
+import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.util.HibernateUtil;
 
@@ -23,33 +25,33 @@ public class Application {
     private static CompanyDao companyDao = null;
 
     public static void main(String[] args) {
-        System.out.println("Create new companySingleton with name \"Adidas\"");
-        CompanySingleton companySingleton = CompanySingleton.getInstance();
-        companySingleton.setFullName("Adidas");
+        System.out.println("Create new company with name \"Adidas\"");
+        Company company = new Company();
+        company.setFullName("Adidas");
         int choice = getUserChoiceOfDataStorage();
-        List<Employee> employeeList = companySingleton.takeEmployeesOnWork();
+        List<Employee> employeeList = company.takeEmployeesOnWork();
         printEmployeeList(employeeList);
-        companySingleton.setProfit(companySingleton.earnMoney());
+        company.setProfit(company.earnMoney());
 
-        System.out.println("The companySingleton earned: " + companySingleton.getProfit() + "!!!");
-        System.out.println("The companySingleton must to pay staff salaries");
+        System.out.println("The company earned: " + company.getProfit() + "!!!");
+        System.out.println("The company must to pay staff salaries");
 
-        companySingleton.paySalaryStaff();
+        company.paySalaryStaff();
 
-        System.out.println("finance status companySingleton after payment salary: profit = " + companySingleton.getProfit());
-        if (companySingleton.getProfit() < 0) {
-            System.out.println("Ops, the companySingleton had a loss!!!");
+        System.out.println("finance status company after payment salary: profit = " + company.getProfit());
+        if (company.getProfit() < 0) {
+            System.out.println("Ops, the company had a loss!!!");
         }
-        companyDao.saveOrUpdate(companySingleton);
-        saveAllEmployees(employeeList, companySingleton.getId());
+        companyDao.saveOrUpdate(company);
+        saveAllEmployees(employeeList, company.getId());
         System.out.println("Salary:");
         printEmployeeList(employeeList);
         System.out.println("List of employee order by salary:");
-        printEmployeeList(employeeDao.orderBySalary(companySingleton.getId()));
+        printEmployeeList(employeeDao.orderBySalary(company.getId()));
         System.out.println("List of employee order by second name:");
-        printEmployeeList(employeeDao.orderBySecondName(companySingleton.getId()));
+        printEmployeeList(employeeDao.orderBySecondName(company.getId()));
         System.out.println("Employee with first name Walt");
-        printEmployeeList(employeeDao.findEmployeeWithFirstName("Walt", companySingleton.getId()));
+        printEmployeeList(employeeDao.findEmployeesWithFirstName("Walt", company.getId()));
         if (choice == 2) {
             HibernateUtil.stopConnectionProvider();
         }
@@ -57,7 +59,7 @@ public class Application {
     private static void saveAllEmployees(List<Employee> employeeList, int idCompany) {
         for (Employee employee: employeeList) {
             employee.setIdCompany(idCompany);
-            employeeDao.save(employee);
+            employeeDao.saveOrUpdate(employee);
         }
     }
 
@@ -81,7 +83,9 @@ public class Application {
         do {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             try {
-                System.out.println("If you want save date with jdbc enter 1, with hibernate 2");
+                System.out.println("If you want saveOrUpdate date with jdbc enter 1," +
+                        "\nwith hibernate enter 2, " +
+                        "\nwith File enter 3");
                 choice = Integer.parseInt(reader.readLine());
                 if (choice == 1) {
                     employeeDao = new EmployeeDaoImplJDBC();
@@ -92,6 +96,11 @@ public class Application {
                     HibernateUtil.getSessionFactory();
                     employeeDao = new EmployeeDaoImpl();
                     companyDao = new CompanyDaoImpl();
+                    break;
+                }
+                if (choice == 3) {
+                    employeeDao = new EmployeeDaoImplFile();
+                    companyDao = new CompanyDaoImplFile();
                     break;
                 }
             } catch (Exception e) {

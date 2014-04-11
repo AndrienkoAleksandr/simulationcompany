@@ -32,7 +32,7 @@ public abstract class Employee {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="company_id", referencedColumnName="id" ,insertable = false, updatable = false)
-    private CompanySingleton company;
+    private Company company;
 
     public Employee() {
     }
@@ -83,11 +83,11 @@ public abstract class Employee {
         this.firstName = firstName;
     }
 
-    public CompanySingleton getCompany() {
+    public Company getCompany() {
         return company;
     }
 
-    public void setCompany(CompanySingleton company) {
+    public void setCompany(Company company) {
         this.company = company;
     }
 

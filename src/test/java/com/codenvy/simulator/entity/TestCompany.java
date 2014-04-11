@@ -18,31 +18,31 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestCompany {
 
-    CompanySingleton companySingleton = null;
+    Company company = null;
     List<Employee> employees = null;
     int testAmountEmployee;
 
     @Before
     public void setupTestCompany() {
-        companySingleton = CompanySingleton.getInstance();
+        company = new Company();
         employees = new ArrayList<Employee>();
         for (int i = 0; i < testAmountEmployee; i++) {
             employees.add(new EmployeeWithFixedSalary());
         }
-        companySingleton.setEmployees(employees);
+        company.setEmployees(employees);
     }
 
     @Test
     public void testEarnedMoney() {
         int amountEmployee = 10;
-        double earnedMoney = companySingleton.earnMoney();
+        double earnedMoney = company.earnMoney();
         assertTrue(earnedMoney <= Constant.MAX_FIXED_SALARY * amountEmployee);
     }
 
     @Test
     public void testPaySalaryStaffWithPositiveProfit() {
-        companySingleton.setProfit(100000.0);
-        companySingleton.paySalaryStaff();
+        company.setProfit(100000.0);
+        company.paySalaryStaff();
         for(Employee employee: employees){
             assertNotNull(employee);
             assertTrue(employee.getSalary() > 0);
@@ -51,9 +51,9 @@ public class TestCompany {
 
     @Test
     public void testPaySalaryStaffWithNegativeProfit() {
-        companySingleton.takeEmployeesOnWork();
-        companySingleton.setProfit(-100000.0);
-        companySingleton.paySalaryStaff();
+        company.takeEmployeesOnWork();
+        company.setProfit(-100000.0);
+        company.paySalaryStaff();
         for(Employee employee: employees){
             assertNotNull(employee);
             assertTrue(employee.getSalary() >= 0);
@@ -62,7 +62,7 @@ public class TestCompany {
 
     @After
     public void clear() {
-        companySingleton = null;
+        company = null;
         employees = null;
     }
 }
