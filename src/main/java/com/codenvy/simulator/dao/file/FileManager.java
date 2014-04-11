@@ -23,6 +23,18 @@ import static java.nio.file.Files.createFile;
  */
 public class FileManager {
 
+    private static FileManager fileManager = null;
+
+    private FileManager() {
+    }
+
+    public static FileManager getInstance(){
+        if (fileManager == null) {
+            fileManager = new FileManager();
+        }
+        return fileManager;
+    }
+
     protected void writeToFile(Path path,List<String> lines) {
         try {
             Files.delete(path);

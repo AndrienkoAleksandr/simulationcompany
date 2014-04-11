@@ -19,7 +19,7 @@ import static com.sun.org.apache.xerces.internal.util.XMLChar.trim;
  */
 public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
 
-    private FileManager fileManager = new FileManager();
+    private FileManager fileManager = FileManager.getInstance();
 
     private Path path = Paths.get(Constant.pathToEmployeeFile);
 

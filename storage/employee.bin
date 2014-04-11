@@ -37,3 +37,8 @@
 {37, Floyd, Albertson, 1984-04-07, 3163.571833608205, 3, EmployeeWithHourlyWages}
 {38, Henry, Adderiy, 1986-01-04, 2498.9102732769943, 3, EmployeeWithHourlyWages}
 {39, Holly, Addington, 1990-01-11, 2788.963531965082, 3, EmployeeWithHourlyWages}
+{40, Carry, Addington, 1984-01-26, 7586.746765053573, 4, EmployeeWithFixedSalary}
+{41, Henry, Babcock, 1982-07-02, 2938.491683996734, 4, EmployeeWithFixedSalary}
+{42, Denis, Backer, 1981-07-14, 2190.7477196570953, 4, EmployeeWithFixedSalary}
+{43, Denis, Abramson, 1981-06-12, 2967.92526526971, 4, EmployeeWithHourlyWages}
+{44, Cris, Backer, 1982-06-11, 2541.522728446786, 4, EmployeeWithHourlyWages}

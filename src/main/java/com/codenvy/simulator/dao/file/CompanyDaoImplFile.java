@@ -15,7 +15,7 @@ import static com.sun.org.apache.xerces.internal.util.XMLChar.trim;
  */
 public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
 
-    private FileManager fileManager = new FileManager();
+    private FileManager fileManager = FileManager.getInstance();;
 
     private Path path = Paths.get(Constant.pathToCompanyFile);
 
