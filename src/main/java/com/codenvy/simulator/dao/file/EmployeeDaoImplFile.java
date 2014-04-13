@@ -2,7 +2,8 @@ package com.codenvy.simulator.dao.file;
 
 import com.codenvy.simulator.constant.Constant;
 import com.codenvy.simulator.dao.EmployeeDao;
-import com.codenvy.simulator.dao.file.comparator.ComparatorEmployeeBySecondName;
+import com.codenvy.simulator.dao.file.comparator.ComparatorEmployee;
+import com.codenvy.simulator.dao.file.comparator.EnumComparatorEmployee;
 import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.entity.EmployeeWithFixedSalary;
 import com.codenvy.simulator.entity.EmployeeWithHourlyWages;
@@ -150,14 +151,14 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
     @Override
     public List<Employee> orderBySalary(int idCompany) {
         List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
-        Collections.sort(employees, new ComparatorEmployeeBySecondName());
+        Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_SALARY));
         return employees;
     }
 
     @Override
     public List<Employee> orderBySecondName(int idCompany) {
         List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
-        Collections.sort(employees, new ComparatorEmployeeBySecondName());
+        Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_SECOND_NAME));
         return employees;
     }
 }

@@ -68,17 +68,13 @@ public class FileManager {
     }
 
     protected void createFileIfNotExist(Path path) {
-        Set<PosixFilePermission> perms
-                = PosixFilePermissions.fromString("rw-rw-rw-");
-        FileAttribute<Set<PosixFilePermission>> attr
-                = PosixFilePermissions.asFileAttribute(perms);
         try {
             Path directories = path.getParent();
             if (!Files.exists(directories)) {
                 Files.createDirectories(directories);
             }
             if (!Files.exists(path)) {
-                createFile(path, attr);
+                createFile(path);
             }
         } catch (IOException e) {
             e.printStackTrace();
