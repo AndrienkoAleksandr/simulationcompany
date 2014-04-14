@@ -31,7 +31,7 @@ public class Application {
         int choice = getUserChoiceOfDataStorage();
         List<Employee> employeeList = company.takeEmployeesOnWork();
         printEmployeeList(employeeList);
-        company.setProfit(company.earnMoney());
+        company.earnMoney();
 
         System.out.println("The company earned: " + company.getProfit() + "!!!");
         System.out.println("The company must to pay staff salaries");

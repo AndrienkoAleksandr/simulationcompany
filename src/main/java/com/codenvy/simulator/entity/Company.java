@@ -74,7 +74,9 @@ public class Company {
 
     public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
-        return profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        double earnedMoney = profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        setProfit(earnedMoney);
+        return earnedMoney;
     }
 
     public void paySalaryStaff() {
