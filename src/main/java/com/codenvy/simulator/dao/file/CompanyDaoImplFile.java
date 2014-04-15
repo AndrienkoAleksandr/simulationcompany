@@ -17,7 +17,7 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
 
     private FileManager fileManager = FileManager.getInstance();;
 
-    private Path path = Paths.get(Constant.pathToCompanyFile);
+    public static Path path = Paths.get(Constant.PATH_TO_COMPANY_FILE);
 
     @Override
     public void saveOrUpdate(Company company) {

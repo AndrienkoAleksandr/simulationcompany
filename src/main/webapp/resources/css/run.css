@@ -1,0 +1,12 @@
+#ScrollBlock {
+    margin: 0 auto; /* чтобы было по центру */
+    height: 400px;
+    width: 400px;
+    overflow: auto;
+    overflow-x: hidden; /* для IE */
+    background: olive;
+}
+.text {
+    width: 180px;
+    margin: 0 auto;
+}

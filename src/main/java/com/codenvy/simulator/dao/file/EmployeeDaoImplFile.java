@@ -22,7 +22,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
 
     private FileManager fileManager = FileManager.getInstance();
 
-    private Path path = Paths.get(Constant.pathToEmployeeFile);
+    public static Path path = Paths.get(Constant.PATH_TO_EMPLOYEE_FILE);
 
     @Override
     public void saveOrUpdate(Employee employee) {
