@@ -137,15 +137,10 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
     }
 
     @Override
-    public List<Employee> findEmployeesWithFirstName(String name, int idCompany) {
+    public List<Employee> orderByFirstName(int idCompany) {
         List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
-        List<Employee> employeeList = new ArrayList<Employee>();
-        for (Employee employee: employees) {
-            if (employee.getFirstName().equals(name)) {
-                employeeList.add(employee);
-            }
-        }
-        return employeeList;
+        Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_FIRST_NAME));
+        return employees;
     }
 
     @Override
@@ -156,7 +151,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
     }
 
     @Override
-    public List<Employee> findEmployeeWithSecondName(int idCompany) {
+    public List<Employee> orderByLastName(int idCompany) {
         List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
         Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_SECOND_NAME));
         return employees;

@@ -26,6 +26,16 @@
         <url-pattern>/run</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SortedController</servlet-name>
+        <servlet-class>com.codenvy.simulator.servlet.SortedServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SortedController</servlet-name>
+        <url-pattern>/run/sort</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>default</servlet-name>
         <url-pattern>*.css</url-pattern>

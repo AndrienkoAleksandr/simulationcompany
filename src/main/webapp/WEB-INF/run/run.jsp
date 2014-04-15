@@ -13,11 +13,12 @@
     <meta charset="UTF-8">
     <link href="${pageContext.request.contextPath}/resources/css/default.css"  rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/resources/css/run.css"  rel="stylesheet" type="text/css" />
+    <link href="${pageContext.request.contextPath}/resources/css/sort.css"  rel="stylesheet" type="text/css" />
     <title>Run Simulation</title>
 </head>
 <body background="${pageContext.request.contextPath}/resources/img/background.jpg">
 <%@include file="/header.jsp" %>
-<div class = "text">
+<div id = "text1">
     <p>Company earned:</p>
     ${earned_money}
     <p>Company pay salary to staff:</p>
@@ -36,7 +37,17 @@
         </c:forEach>
     </table>
 </div>
-<div class = "text">
+<div id = "sort">
+    <form action="${pageContext.request.contextPath}/run" method="post">
+        <label><b>Sorted by:</b></label>
+        <Br>
+        <input class = "storage" type="radio" name="sorting" value="ByFirstName" >by first name<Br>
+        <input class = "storage" type="radio" name="sorting" value="BySecondName" checked>by second name<Br>
+        <input class = "storage" type="radio" name="sorting" value="BySalary">by salary<Br>
+        <button type="submit">Sort!</button>
+    </form>
+</div>
+<div id = "text2">
     <p>Company total profit:</p>
     ${company.getProfit()}
 </div>

@@ -16,7 +16,7 @@
     company can earn money less than the total salary of workers!
     This would mean that the company incurred a loss this month.
 </p>
-<form action = "${pageContext.request.contextPath}/run" method="post">
+<form action = "${pageContext.request.contextPath}/run" method="get">
     <p>
         <label><b>Save date with:</b></label>
         <Br>

@@ -17,17 +17,43 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by USER on 14.04.2014.
  */
 public class RunServlet extends HttpServlet {
     public static final String RUN_PAGE = "/WEB-INF/run/run.jsp";
+    public static final String NOT_FOUND = "/WEB-INF/error/404.jsp";
+    private EmployeeDao employeeDao = null;
+    private CompanyDao companyDao = null;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        EmployeeDao employeeDao = null;
-        CompanyDao companyDao = null;
+        Company company = (Company)request.getSession().getAttribute("company");
+        String typeOfSorting = (String)request.getParameter("sorting");
+        List<Employee> sortedEmployee = new ArrayList<>();
+        int companyId = company.getId();
+        switch (typeOfSorting) {
+            case "ByFirstName":
+                sortedEmployee = employeeDao.orderByFirstName(companyId);
+                break;
+            case "BySecondName":
+                sortedEmployee = employeeDao.orderByLastName(companyId);
+                break;
+            case "BySalary":
+                sortedEmployee = employeeDao.orderBySalary(companyId);
+                break;
+        }
+        company.setEmployees(sortedEmployee);
+        request.getSession().setAttribute("company", company);
+        request.getRequestDispatcher(RUN_PAGE).include(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getSession().setAttribute("start", false);
         String storage = request.getParameter("storage");
         String companyName = request.getParameter("company name");
         switch (storage) {
@@ -42,7 +68,6 @@ public class RunServlet extends HttpServlet {
             case "Files":
                 employeeDao = new EmployeeDaoImplFile();
                 companyDao = new CompanyDaoImplFile();
-
                 Path path = Paths.get(getServletContext().getRealPath("/"));
                 EmployeeDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_EMPLOYEE_FILE);
                 CompanyDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_COMPANY_FILE);
