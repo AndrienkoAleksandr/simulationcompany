@@ -13,7 +13,6 @@
     <meta charset="UTF-8">
     <link href="${pageContext.request.contextPath}/resources/css/default.css"  rel="stylesheet" type="text/css" />
     <link href="${pageContext.request.contextPath}/resources/css/run.css"  rel="stylesheet" type="text/css" />
-    <link href="${pageContext.request.contextPath}/resources/css/sort.css"  rel="stylesheet" type="text/css" />
     <title>Run Simulation</title>
 </head>
 <body background="${pageContext.request.contextPath}/resources/img/background.jpg">
@@ -28,10 +27,10 @@
         <c:forEach items="${company.getEmployees()}"  var = "employee">
             <tr>
                 <td>
-                        ${employee.getFirstName()} ${employee.getSecondName()}
+                    ${employee.getFirstName()} ${employee.getSecondName()}
                 </td>
                 <td>
-                        ${employee.getSalary()}
+                    ${employee.getSalary()}
                 </td>
             </tr>
         </c:forEach>

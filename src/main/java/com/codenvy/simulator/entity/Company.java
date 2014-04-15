@@ -100,10 +100,12 @@ public class Company {
         companyDao.saveOrUpdate(this);
     }
 
-    public void saveEmployeeListToStorage(int idCompany) {
-        for (Employee employee: employees) {
-            employee.setIdCompany(idCompany);
-            employeeDao.saveOrUpdate(employee);
+    public void saveEmployeeListToStorage() {
+        if (employees != null) {
+            for (Employee employee: employees) {
+                employee.setIdCompany(id);
+                employeeDao.saveOrUpdate(employee);
+            }
         }
     }
 

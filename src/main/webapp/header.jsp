@@ -9,6 +9,5 @@
 <div>
     <h2>
         <a href = "${pageContext.request.contextPath}/">Main</a>
-        <a href = "${pageContext.request.contextPath}/hist">History Simulation</a>
     </h2>
 </div>

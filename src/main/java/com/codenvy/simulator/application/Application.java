@@ -48,7 +48,7 @@ public class Application {
             System.out.println("Ops, the company had a loss!!!");
         }
         company.saveCompanyToStorage();
-        company.saveEmployeeListToStorage(company.getId());
+        company.saveEmployeeListToStorage();
         System.out.println("Salary:");
         printEmployeeList(employeeList);
         System.out.println("List of employee order by salary:");

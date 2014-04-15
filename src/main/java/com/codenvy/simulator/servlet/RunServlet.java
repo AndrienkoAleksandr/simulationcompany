@@ -9,6 +9,9 @@ import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
 import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.entity.Employee;
+import com.codenvy.simulator.module.JDBCModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +35,7 @@ public class RunServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Company company = (Company)request.getSession().getAttribute("company");
-        String typeOfSorting = (String)request.getParameter("sorting");
+        String typeOfSorting = request.getParameter("sorting");
         List<Employee> sortedEmployee = new ArrayList<>();
         int companyId = company.getId();
         switch (typeOfSorting) {
@@ -53,38 +56,51 @@ public class RunServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getSession().setAttribute("start", false);
-        String storage = request.getParameter("storage");
-        String companyName = request.getParameter("company name");
-        switch (storage) {
-            case "JDBC":
-                employeeDao = new EmployeeDaoImplJDBC();
-                companyDao = new CompanyDaoImplJDBC();
-                break;
-            case "Hibernate":
-                employeeDao = new EmployeeDaoImplJDBC();
-                companyDao = new CompanyDaoImplJDBC();
-                break;
-            case "Files":
-                employeeDao = new EmployeeDaoImplFile();
-                companyDao = new CompanyDaoImplFile();
-                Path path = Paths.get(getServletContext().getRealPath("/"));
-                EmployeeDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_EMPLOYEE_FILE);
-                CompanyDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_COMPANY_FILE);
-                break;
+        if (request.getParameter("storage") == null &&
+                request.getSession().getAttribute("start") == true) {
+            request.getRequestDispatcher(NOT_FOUND).include(request, response);
+            return;
         }
-        Company company = new Company();
-        company.setFullName(companyName);
-        company.takeEmployeesOnWork();
-        request.getSession().setAttribute("earned_money", company.earnMoney());
-        company.paySalaryStaff();
-        companyDao.saveOrUpdate(company);
-        //Todo
-        for (Employee employee: company.getEmployees()) {
-            employee.setIdCompany(company.getId());
-            employeeDao.saveOrUpdate(employee);
+        if ((boolean)request.getSession().getAttribute("start")) {
+            String storage = request.getParameter("storage");
+            String companyName = request.getParameter("company name");
+            Company company = null;
+            Injector injector = null;
+            switch (storage) {
+                case "JDBC":
+                    injector = Guice.createInjector(new JDBCModule());
+                    company = injector.getInstance(Company.class);
+                    employeeDao = new EmployeeDaoImplJDBC();
+                    companyDao = new CompanyDaoImplJDBC();
+                    break;
+                case "Hibernate":
+                    injector = Guice.createInjector(new JDBCModule());
+                    company = injector.getInstance(Company.class);
+                    employeeDao = new EmployeeDaoImplJDBC();
+                    employeeDao = new EmployeeDaoImplJDBC();
+                    companyDao = new CompanyDaoImplJDBC();
+                    break;
+                case "Files":
+                    injector = Guice.createInjector(new JDBCModule());
+                    company = injector.getInstance(Company.class);
+                    employeeDao = new EmployeeDaoImplFile();
+                    companyDao = new CompanyDaoImplFile();
+                    Path path = Paths.get(getServletContext().getRealPath("/"));
+                    EmployeeDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_EMPLOYEE_FILE);
+                    CompanyDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_COMPANY_FILE);
+                    break;
+            }
+            company.setFullName(companyName);
+            company.takeEmployeesOnWork();
+            request.getSession().setAttribute("earned_money", company.earnMoney());
+            company.paySalaryStaff();
+            companyDao.saveOrUpdate(company);
+            company.saveEmployeeListToStorage();
+            request.getSession().setAttribute("company", company);
+            request.getSession().setAttribute("start", false);
+            request.getRequestDispatcher(RUN_PAGE).include(request, response);
+        } else {
+            request.getRequestDispatcher(RUN_PAGE).include(request, response);
         }
-        request.getSession().setAttribute("company", company);
-        request.getRequestDispatcher(RUN_PAGE).include(request, response);
     }
 }

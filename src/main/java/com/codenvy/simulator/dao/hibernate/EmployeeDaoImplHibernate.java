@@ -52,6 +52,7 @@ public class EmployeeDaoImplHibernate implements EmployeeDao {
             if (session != null && session.isOpen()) {
                 session.close();
             }
+            HibernateUtil.stopConnectionProvider();
         }
     }
 

@@ -11,10 +11,10 @@ public abstract class Constant {
             "Cris", "Marry", "May", "Iona", "Candy", "Cherry", "Eddy", "Holly"};
 
     public static final String[] SECOND_NAME_LIST = new String[]{"Abramson",
-            "Adamson", "Adderiy", "Addington", "Adrian", "Albertson",
-            "Aldridge", "Allford", "Alsopp", "Anderson", "Andrews",
-            "Archibald", "Arnold", "Arthurs", "Atcheson", "Attwood",
-            "Audley", "Austin", "Ayrton", "Babcock", "Backer"};
+            "Adamson", "Berry", "Eddington", "Osborn", "Mayer",
+            "Eagle", "Beckhem", "Serafim", "Anderson", "Fluffy",
+            "Ruby", "Java", "Cuper", "Unit", "Korn",
+            "Glens", "Tramp", "Donalds", "Babcock", "Backer"};
 
     public static final String PATH_TO_COMPANY_FILE = "storage/company.bin";
 

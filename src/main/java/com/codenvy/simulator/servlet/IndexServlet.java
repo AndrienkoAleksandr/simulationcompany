@@ -23,7 +23,7 @@ public class IndexServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        request.getSession().setAttribute("start", true);
         request.getRequestDispatcher(INDEX_PAGE).include(request, response);
     }
 }
