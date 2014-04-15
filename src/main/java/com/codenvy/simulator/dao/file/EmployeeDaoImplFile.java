@@ -155,7 +155,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
     }
 
     @Override
-    public List<Employee> orderBySecondName(int idCompany) {
+    public List<Employee> findEmployeeWithSecondName(int idCompany) {
         List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
         Collections.sort(employees, new ComparatorEmployeeBySecondName());
         return employees;

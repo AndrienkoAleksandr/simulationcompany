@@ -54,7 +54,7 @@ public class Application {
         System.out.println("List of employee order by salary:");
         printEmployeeList(employeeDao.orderBySalary(company.getId()));
         System.out.println("List of employee order by second name:");
-        printEmployeeList(employeeDao.orderBySecondName(company.getId()));
+        printEmployeeList(employeeDao.findEmployeeWithSecondName(company.getId()));
         System.out.println("Employee with first name Walt");
         printEmployeeList(employeeDao.findEmployeesWithFirstName("Walt", company.getId()));
         if (choice == 2) {

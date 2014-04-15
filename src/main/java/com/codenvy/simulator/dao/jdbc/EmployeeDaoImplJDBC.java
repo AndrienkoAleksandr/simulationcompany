@@ -112,7 +112,7 @@ public class EmployeeDaoImplJDBC  implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> orderBySecondName(int idCompany) {
+    public List<Employee> findEmployeeWithSecondName(int idCompany) {
         Connection connection = DatabaseConnection.getConnection();
         String sql = "SELECT * FROM Employees WHERE Company_id = ? ORDER BY second_name";
         PreparedStatement statement = null;

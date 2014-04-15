@@ -100,7 +100,7 @@ public class EmployeeDaoImplHibernate implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> orderBySecondName(int idCompany) {
+    public List<Employee> findEmployeeWithSecondName(int idCompany) {
         Session session = null;
         List<Employee> employeeList = null;
         try {
