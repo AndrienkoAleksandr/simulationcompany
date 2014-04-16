@@ -1,7 +1,5 @@
 package com.codenvy.simulator.dao.file;
 
-import com.codenvy.simulator.entity.Employee;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -9,13 +7,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
 import static java.nio.file.Files.createFile;
 
 /**
@@ -68,17 +61,13 @@ public class FileManager {
     }
 
     protected void createFileIfNotExist(Path path) {
-        Set<PosixFilePermission> perms
-                = PosixFilePermissions.fromString("rw-rw-rw-");
-        FileAttribute<Set<PosixFilePermission>> attr
-                = PosixFilePermissions.asFileAttribute(perms);
         try {
             Path directories = path.getParent();
             if (!Files.exists(directories)) {
                 Files.createDirectories(directories);
             }
             if (!Files.exists(path)) {
-                createFile(path, attr);
+                createFile(path);
             }
         } catch (IOException e) {
             e.printStackTrace();

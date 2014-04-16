@@ -44,12 +44,12 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
         Class cl = employee.getClass();
         String dType = cl.getSimpleName();
 
-        String line = "{" + employee.getId() + ", "
-                + employee.getFirstName() + ", "
-                + employee.getSecondName() + ", "
-                + employee.getDataOfBirth() + ", "
-                + employee.getSalary() + ", "
-                + employee.getIdCompany() + ", "
+        String line = "{" + employee.getId() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getFirstName() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getSecondName() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getDataOfBirth() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getSalary() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getIdCompany() + Constant.FILE_BASE_DATE_SEPARATOR + " "
                 + dType + "}";
         lines.add(line);
         fileManager.writeToFile(path, lines);
@@ -97,7 +97,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
             return null;
         }
         int id = getIdFromLine(line);
-        line = line.substring(line.indexOf(","));
+        line = line.substring(line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR + " "));
         int beginLine = 0;
         int endLine = 0;
         String[] employeeParam = new String[5];

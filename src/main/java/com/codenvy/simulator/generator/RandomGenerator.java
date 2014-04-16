@@ -2,7 +2,6 @@ package com.codenvy.simulator.generator;
 
 import com.codenvy.simulator.constant.Constant;
 import com.codenvy.simulator.entity.Employee;
-import com.codenvy.simulator.entity.EmployeeWithFixedSalary;
 import com.codenvy.simulator.entity.EmployeeWithHourlyWages;
 import com.codenvy.simulator.entity.EnumEmployee;
 import com.codenvy.simulator.entity.factory.FactoryEmployeeFixedSalary;

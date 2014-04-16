@@ -3,7 +3,7 @@ package com.codenvy.simulator.constant;
 /**
  * Created by Andrienko Aleksander on 16.03.14.
  */
-public abstract class Constant {
+public final class Constant {
 
     /* String */
     public static final String[] FIRST_NAME_LIST = new String[] {"Glori", "Jim", "Carry", "Denis",
@@ -19,6 +19,8 @@ public abstract class Constant {
     public static final String PATH_TO_COMPANY_FILE = "storage/company.bin";
 
     public static final String PATH_TO_EMPLOYEE_FILE = "storage/employee.bin";
+
+    public static final char FILE_BASE_DATE_SEPARATOR = ',';
 
     /* Integer */
     public static final Integer FIRST_NAME_LIST_LENGTH = FIRST_NAME_LIST.length;

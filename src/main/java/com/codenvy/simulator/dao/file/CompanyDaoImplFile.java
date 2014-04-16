@@ -15,7 +15,7 @@ import static com.sun.org.apache.xerces.internal.util.XMLChar.trim;
  */
 public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
 
-    private FileManager fileManager = FileManager.getInstance();;
+    private FileManager fileManager = FileManager.getInstance();
 
     public static Path path = Paths.get(Constant.PATH_TO_COMPANY_FILE);
 
@@ -33,8 +33,8 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         } else {
             company.setId(generateId(lines));
         }
-        String line = "{" + company.getId() + ", "
-                + company.getFullName() + ", "
+        String line = "{" + company.getId() + Constant.FILE_BASE_DATE_SEPARATOR +" "
+                + company.getFullName() + Constant.FILE_BASE_DATE_SEPARATOR +" "
                 + company.getProfit() + "}";
         lines.add(line);
         fileManager.writeToFile(path, lines);
@@ -70,11 +70,11 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
     private Company generateCompanyFromLine(String line) {
         Company company = new Company();
         company.setId(getIdFromLine(line));
-        int beginLine = line.indexOf(",") + 1;
-        int endLine = line.indexOf(",",beginLine);
+        int beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR) + 1;
+        int endLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, beginLine);
         String name = trim(line.substring(beginLine, endLine)) + 1;
         company.setFullName(name);
-        beginLine = line.indexOf(",", endLine) + 1;
+        beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine) + 1;
         endLine = line.indexOf("}");
         String profit = trim(line.substring(beginLine, endLine));
         company.setProfit(Double.parseDouble(profit));
