@@ -19,7 +19,7 @@ public class RunFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                           FilterChain chain) throws IOException, ServletException {
-        chain.doFilter(new FilteredRequest(request), response);
+            chain.doFilter(new FilteredRequest(request), response);
 
     }
 
