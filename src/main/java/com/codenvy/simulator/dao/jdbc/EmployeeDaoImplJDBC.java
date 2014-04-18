@@ -41,7 +41,7 @@ public class EmployeeDaoImplJDBC  implements EmployeeDao {
             if (employee.getIdCompany() != null) {
                 preparedStatement.setDouble(6, employee.getIdCompany());
             } else {
-                throw new IllegalArgumentException("company_id can't be null!!!");
+                throw new IllegalArgumentException("field company_id can't be null!!!");
             }
             Class newClass = employee.getClass();
             String typeEmployee = newClass.getSimpleName();

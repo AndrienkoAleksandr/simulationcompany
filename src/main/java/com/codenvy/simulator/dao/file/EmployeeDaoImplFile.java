@@ -97,13 +97,13 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
             return null;
         }
         int id = getIdFromLine(line);
-        line = line.substring(line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR + " "));
+        line = line.substring(line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR));
         int beginLine = 0;
         int endLine = 0;
         String[] employeeParam = new String[5];
         for(int i = 0; i < 5; i++) {
-            beginLine = line.indexOf(",", endLine);
-            endLine = line.indexOf(",", beginLine + 1);
+            beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine);
+            endLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, beginLine + 1);
             employeeParam[i] = trim(line.substring(beginLine + 1, endLine));
         }
         String dType = trim(line.substring(endLine + 1 , line.length() - 1));

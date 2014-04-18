@@ -34,20 +34,29 @@ import java.util.List;
 public class RunServlet extends HttpServlet {
     public static final String RUN_PAGE = "/WEB-INF/run/run.jsp";
     public static final String NOT_FOUND = "/WEB-INF/error/404.jsp";
-    @Inject private EmployeeDao employeeDao = null;
-    @Inject private CompanyDao companyDao = null;
-
-    @Inject
-    public RunServlet() {
-        super();
-    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Company company = (Company)request.getSession().getAttribute("company");
         String typeOfSorting = request.getParameter("sorting");
+        if (typeOfSorting == null) {
+            request.getRequestDispatcher(NOT_FOUND).include(request, response);
+        }
+        String storage = company.getTypeOfSavingData();
         List<Employee> sortedEmployee = new ArrayList<>();
         int companyId = company.getId();
+        EmployeeDao employeeDao = null;
+        switch (storage) {
+            case "JDBC":
+                employeeDao = new EmployeeDaoImplJDBC();
+                break;
+            case "Hibernate":
+                employeeDao = new EmployeeDaoImplHibernate();
+                break;
+            case "Files":
+                employeeDao = new EmployeeDaoImplFile();
+                break;
+        }
         switch (typeOfSorting) {
             case "ByFirstName":
                 sortedEmployee = employeeDao.orderByFirstName(companyId);
@@ -66,15 +75,14 @@ public class RunServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if (request.getParameter("storage") == null &&
-                (request.getSession().getAttribute("start") == null ||
-                        request.getSession().getAttribute("start") == true)) {
+        String storage = request.getParameter("storage");
+        if (storage == null && (request.getSession().getAttribute("start") == null ||
+                request.getSession().getAttribute("start") == true)) {
             request.getRequestDispatcher(NOT_FOUND).include(request, response);
             return;
         }
         if (request.getSession().getAttribute("start") != null
                     && (boolean)request.getSession().getAttribute("start")) {
-            String storage = request.getParameter("storage");
             String companyName = request.getParameter("company name");
             Company company = null;
             Injector injector = null;
@@ -82,20 +90,14 @@ public class RunServlet extends HttpServlet {
                 case "JDBC":
                     injector = Guice.createInjector(new JDBCModule());
                     company = injector.getInstance(Company.class);
-                    employeeDao = new EmployeeDaoImplJDBC();
-                    companyDao = new CompanyDaoImplJDBC();
                     break;
                 case "Hibernate":
                     injector = Guice.createInjector(new HibernateModule());
                     company = injector.getInstance(Company.class);
-                    employeeDao = new EmployeeDaoImplHibernate();
-                    companyDao = new CompanyDaoImplHibernate();
                     break;
                 case "Files":
                     injector = Guice.createInjector(new FileModule());
                     company = injector.getInstance(Company.class);
-                    employeeDao = new EmployeeDaoImplFile();
-                    companyDao = new CompanyDaoImplFile();
                     Path path = Paths.get(getServletContext().getRealPath("/"));
                     EmployeeDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_EMPLOYEE_FILE);
                     CompanyDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_COMPANY_FILE);
@@ -105,6 +107,7 @@ public class RunServlet extends HttpServlet {
             company.takeEmployeesOnWork();
             request.getSession().setAttribute("earned_money", company.earnMoney());
             company.paySalaryStaff();
+            company.setTypeOfSavingData(storage);
             company.saveCompanyToStorage();
             company.saveEmployeeListToStorage();
             request.getSession().setAttribute("company", company);

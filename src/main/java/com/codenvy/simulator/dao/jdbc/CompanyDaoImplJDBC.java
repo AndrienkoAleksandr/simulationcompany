@@ -18,9 +18,9 @@ public class CompanyDaoImplJDBC implements CompanyDao{
         try {
             connection = DatabaseConnection.getConnection();
 
-            sql = "INSERT INTO Company (id, full_name, profit) " +
-                    "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE " +
-                    "full_name = ?, profit = ?";
+            sql = "INSERT INTO Company (id, full_name, profit, type_saving_data) " +
+                    "VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE " +
+                    "full_name = ?, profit = ?, type_saving_data = ?";
 
             //we need saveOrUpdate id_company for next operation
             PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -31,8 +31,10 @@ public class CompanyDaoImplJDBC implements CompanyDao{
             }
             preparedStatement.setString(2, company.getFullName());
             preparedStatement.setDouble(3, company.getProfit());
-            preparedStatement.setString(4, company.getFullName());
-            preparedStatement.setDouble(5, company.getProfit());
+            preparedStatement.setString(4, company.getTypeOfSavingData());
+            preparedStatement.setString(5, company.getFullName());
+            preparedStatement.setDouble(6, company.getProfit());
+            preparedStatement.setString(7, company.getTypeOfSavingData());
             preparedStatement.executeUpdate();
             resultSet = preparedStatement.getGeneratedKeys();
             if (resultSet.next()) {

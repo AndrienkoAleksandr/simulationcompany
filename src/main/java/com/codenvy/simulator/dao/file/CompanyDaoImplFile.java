@@ -23,6 +23,9 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
     public void saveOrUpdate(Company company) {
         List<String> lines = new ArrayList<String>();
         lines.addAll(fileManager.readFile(path));
+        if (company.getTypeOfSavingData() == null) {
+            throw new IllegalArgumentException("field type_saving_data can't be null!!!");
+        }
         if (company.getId() != null && company.getId() > 0) {
             String lineCompany = findLineForId(company.getId(), lines);
             if (lineCompany != null) {
@@ -34,8 +37,9 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
             company.setId(generateId(lines));
         }
         String line = "{" + company.getId() + Constant.FILE_BASE_DATE_SEPARATOR +" "
-                + company.getFullName() + Constant.FILE_BASE_DATE_SEPARATOR +" "
-                + company.getProfit() + "}";
+                + company.getFullName() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + company.getProfit() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + company.getTypeOfSavingData() + "}";
         lines.add(line);
         fileManager.writeToFile(path, lines);
     }
@@ -64,20 +68,29 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         if (company.getFullName() != null) {
             companyWithSameId.setFullName(company.getFullName());
         }
+        if (company.getTypeOfSavingData() != null) {
+            companyWithSameId.setTypeOfSavingData(company.getTypeOfSavingData());
+        }
         return companyWithSameId;
     }
 
     private Company generateCompanyFromLine(String line) {
         Company company = new Company();
         company.setId(getIdFromLine(line));
-        int beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR) + 1;
-        int endLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, beginLine);
-        String name = trim(line.substring(beginLine, endLine)) + 1;
-        company.setFullName(name);
-        beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine) + 1;
-        endLine = line.indexOf("}");
-        String profit = trim(line.substring(beginLine, endLine));
-        company.setProfit(Double.parseDouble(profit));
+        line = line.substring(line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR));
+        int beginLine = 0;
+        int endLine = 0;
+        String[] companyParam = new String[3];
+        String separator = String.valueOf(Constant.FILE_BASE_DATE_SEPARATOR);
+        for(int i = 0; i < 3; i++) {
+            beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine);
+            if (i == 2) {separator = "}";}
+            endLine = line.indexOf(separator, beginLine + 1);
+            companyParam[i] = trim(line.substring(beginLine + 1, endLine));
+        }
+        company.setFullName(companyParam[0]);
+        company.setProfit(Double.parseDouble(companyParam[1]));
+        company.setTypeOfSavingData(companyParam[2]);
         return company;
     }
 }

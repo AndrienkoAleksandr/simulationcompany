@@ -29,6 +29,9 @@ public class Company {
     @Column(name = "profit")
     private Double profit;
 
+    @Column(name = "type_saving_data")
+    private String typeOfSavingData;
+
     @Transient
     private RandomGenerator generator = new RandomGenerator();
 
@@ -78,6 +81,14 @@ public class Company {
 
     public void setProfit(Double profit) {
         this.profit = profit;
+    }
+
+    public String getTypeOfSavingData() {
+        return typeOfSavingData;
+    }
+
+    public void setTypeOfSavingData(String typeOfSavingData) {
+        this.typeOfSavingData = typeOfSavingData;
     }
 
     public RandomGenerator getGenerator() {

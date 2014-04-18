@@ -36,7 +36,7 @@ public class CompanyDaoImplHibernate implements CompanyDao {
 
     @Override
     public void deleteFromId(Company company) {
-        Session session =null;
+        Session session = null;
         try {
             session = getSession();
             session.beginTransaction();

@@ -4,6 +4,8 @@ import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.dao.file.CompanyDaoImplFile;
 import com.codenvy.simulator.dao.file.EmployeeDaoImplFile;
+import com.codenvy.simulator.dao.file.EnumTypeOfSavingData;
+import com.codenvy.simulator.dao.file.comparator.EnumComparatorEmployee;
 import com.codenvy.simulator.dao.hibernate.CompanyDaoImplHibernate;
 import com.codenvy.simulator.dao.hibernate.EmployeeDaoImplHibernate;
 import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
@@ -29,6 +31,7 @@ public class Application {
     private static EmployeeDao employeeDao = null;
     private static CompanyDao companyDao = null;
     private static Company company = null;
+    private static EnumTypeOfSavingData enumTypeOfSavingData = EnumTypeOfSavingData.JDBC;
 
     public static void main(String[] args) {
         System.out.println("Create new company with name \"Adidas\"");
@@ -47,6 +50,7 @@ public class Application {
         if (company.getProfit() < 0) {
             System.out.println("Ops, the company had a loss!!!");
         }
+        company.setTypeOfSavingData(enumTypeOfSavingData.toString());
         company.saveCompanyToStorage();
         company.saveEmployeeListToStorage();
         System.out.println("Salary:");
