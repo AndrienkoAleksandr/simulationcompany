@@ -62,7 +62,7 @@
     </error-page>
 
     <listener>
-        <listener-class>com.codenvy.simulator.servlet.Listener</listener-class>
+        <listener-class>com.codenvy.simulator.servlet.listener.Listener</listener-class>
     </listener>
 
 </web-app>

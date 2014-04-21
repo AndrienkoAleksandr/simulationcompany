@@ -1,4 +1,4 @@
-package com.codenvy.simulator.servlet;
+package com.codenvy.simulator.servlet.listener;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;

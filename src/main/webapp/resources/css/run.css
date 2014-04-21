@@ -1,18 +1,18 @@
 #ScrollBlock {
-    margin: 0 auto; /* чтобы было по центру */
+    margin: 0 auto;
     height: 400px;
     width: 400px;
     overflow: auto;
-    overflow-x: hidden; /* для IE */
+    overflow-x: hidden;
     background: olive;
 }
 
 #ScrollBlock {
-    margin: 0 auto; /* чтобы было по центру */
+    margin: 0 auto;
     height: 400px;
     width: 400px;
     overflow: auto;
-    overflow-x: hidden; /* для IE */
+    overflow-x: hidden;
     background: olive;
 }
 
@@ -25,12 +25,16 @@
 }
 
 #text1 {
-    margin-left: 396px;
+    margin: 0 auto;
     width: 200px;
+    overflow: auto;
+    overflow-x: hidden;
 }
 
 #text2 {
     margin-top: 170px;
-    margin-left: 396px;
+    margin-left: auto;
     width: 200px;
+    overflow: auto;
+    overflow-x: hidden;
 }
