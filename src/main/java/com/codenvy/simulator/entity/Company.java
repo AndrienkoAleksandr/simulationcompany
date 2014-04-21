@@ -100,9 +100,7 @@ public class Company {
     }
 
     public List<Employee> takeEmployeesOnWork() {
-        System.out.println("Generate personal company");
         int amountOfEmployee = generator.generateAmountOfEmployee();
-        System.out.println("Personal company consist of " + amountOfEmployee + " employees");
         employees = generator.generateListAllEmployees(amountOfEmployee);
         return employees;
     }

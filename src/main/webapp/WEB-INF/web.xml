@@ -61,4 +61,8 @@
         <location>/error/exception.jsp</location>
     </error-page>
 
+    <listener>
+        <listener-class>com.codenvy.simulator.servlet.Listener</listener-class>
+    </listener>
+
 </web-app>

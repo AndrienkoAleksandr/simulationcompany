@@ -20,7 +20,6 @@ public class RunFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                           FilterChain chain) throws IOException, ServletException {
             chain.doFilter(new FilteredRequest(request), response);
-
     }
 
     static class FilteredRequest extends HttpServletRequestWrapper {

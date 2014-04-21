@@ -6,6 +6,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div>
     <h2>
-        <a href = "${pageContext.request.contextPath}/">Main</a>
+        <a href = "${pageContext.request.contextPath}/">Main </a>
     </h2>
+    <h3>${time}</h3>
 </div>
