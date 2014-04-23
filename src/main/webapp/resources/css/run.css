@@ -1,40 +1,29 @@
 #ScrollBlock {
     margin: 0 auto;
     height: 400px;
-    width: 400px;
-    overflow: auto;
-    overflow-x: hidden;
-    background: olive;
-}
-
-#ScrollBlock {
-    margin: 0 auto;
-    height: 400px;
-    width: 400px;
+    width: 420px;
     overflow: auto;
     overflow-x: hidden;
     background: olive;
 }
 
 #sort {
-    border-left-width: 600px;
-    border-top-width: 0;
-    height: 110px;
-    margin: -260px 0 1px 700px;
-    width: 250px;
+    height: 16%;
+    margin: -30% 0 1% 76%;
+    width: 18%;
 }
 
 #text1 {
-    margin: 0 auto;
-    width: 200px;
+    margin-left: 40%;
+    width: 28%;
     overflow: auto;
     overflow-x: hidden;
 }
 
 #text2 {
-    margin-top: 170px;
-    margin-left: auto;
-    width: 200px;
+    margin-top: 20%;
+    margin-left: 40%;
+    width: 28%;
     overflow: auto;
     overflow-x: hidden;
 }
