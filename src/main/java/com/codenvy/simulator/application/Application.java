@@ -2,10 +2,9 @@ package com.codenvy.simulator.application;
 
 import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
+import com.codenvy.simulator.dao.EnumTypeOfStorage;
 import com.codenvy.simulator.dao.file.CompanyDaoImplFile;
 import com.codenvy.simulator.dao.file.EmployeeDaoImplFile;
-import com.codenvy.simulator.dao.file.EnumTypeOfSavingData;
-import com.codenvy.simulator.dao.file.comparator.EnumComparatorEmployee;
 import com.codenvy.simulator.dao.hibernate.CompanyDaoImplHibernate;
 import com.codenvy.simulator.dao.hibernate.EmployeeDaoImplHibernate;
 import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
@@ -31,7 +30,6 @@ public class Application {
     private static EmployeeDao employeeDao = null;
     private static CompanyDao companyDao = null;
     private static Company company = null;
-    private static EnumTypeOfSavingData enumTypeOfSavingData = EnumTypeOfSavingData.JDBC;
 
     public static void main(String[] args) {
         System.out.println("Create new company with name \"Adidas\"");
@@ -50,7 +48,6 @@ public class Application {
         if (company.getProfit() < 0) {
             System.out.println("Ops, the company had a loss!!!");
         }
-        company.setTypeOfSavingData(enumTypeOfSavingData.toString());
         company.saveCompanyToStorage();
         company.saveEmployeeListToStorage();
         System.out.println("Salary:");
@@ -95,6 +92,7 @@ public class Application {
                     companyDao = new CompanyDaoImplJDBC();
                     Injector injector = Guice.createInjector(new JDBCModule());
                     company = injector.getInstance(Company.class);
+                    company.setTypeOfSavingData(EnumTypeOfStorage.JDBC.toString());
                     break;
                 }
                 if (choice == 2) {
@@ -103,6 +101,7 @@ public class Application {
                     companyDao = new CompanyDaoImplHibernate();
                     Injector injector = Guice.createInjector(new HibernateModule());
                     company = injector.getInstance(Company.class);
+                    company.setTypeOfSavingData(EnumTypeOfStorage.Hibernate.toString());
                     break;
                 }
                 if (choice == 3) {
@@ -110,6 +109,7 @@ public class Application {
                     companyDao = new CompanyDaoImplFile();
                     Injector injector = Guice.createInjector(new FileModule());
                     company = injector.getInstance(Company.class);
+                    company.setTypeOfSavingData(EnumTypeOfStorage.Files.toString());
                     break;
                 }
             } catch (Exception e) {
