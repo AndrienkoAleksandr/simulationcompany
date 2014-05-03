@@ -1,7 +1,5 @@
 package com.codenvy.simulator.server;
 
-import com.codenvy.simulator.client.entity.CompanyClient;
-import com.codenvy.simulator.client.entity.EmployeeClient;
 import com.codenvy.simulator.client.exception.GenerateCompanyException;
 import com.codenvy.simulator.constant.Constant;
 import com.codenvy.simulator.dao.EmployeeDao;
@@ -18,10 +16,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.codenvy.simulator.client.SimulateService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -30,13 +31,13 @@ import java.util.List;
 public class SimulateServiceImpl extends RemoteServiceServlet implements SimulateService {
 
     @Override
-    public CompanyClient generateCompany() throws GenerateCompanyException {
+    public String generateCompany() throws GenerateCompanyException {
+        List<JSONObject> employeesJSON = new LinkedList<JSONObject>();
+        JSONObject responseJSON = new JSONObject();
         Boolean start = (Boolean) getServletContext().getAttribute("start");
         if (!start) {
-            return (CompanyClient) getServletContext().getAttribute("company");
+            return (String) getServletContext().getAttribute("company");
         }
-            CompanyClient companyClient = new CompanyClient();
-            List<EmployeeClient> employees = new ArrayList<EmployeeClient>();
             String storage = (String) getServletContext().getAttribute("typeOfStorage");
             String companyName = ((String) getServletContext().getAttribute("companyName"));
             checkAttribute(companyName, storage, start);
@@ -62,30 +63,30 @@ public class SimulateServiceImpl extends RemoteServiceServlet implements Simulat
             company.setFullName(companyName);
             company.takeEmployeesOnWork();
             company.earnMoney();
+            double totalProfit = company.getProfit();
             company.paySalaryStaff();
             company.setTypeOfSavingData(storage);
             company.saveCompanyToStorage();
             company.saveEmployeeListToStorage();
 
-            companyClient.setFullName(companyName);
-            companyClient.setTotalMoney(company.getProfit());
-            companyClient.setProfit(company.getProfit());
-            companyClient.setTypeOfSavingData(storage);
-            companyClient.setId(company.getId());
-            for (Employee emp : company.getEmployees()) {
-                employees.add(new EmployeeClient(emp.getId(), emp.getFirstName(),
-                        emp.getSecondName(), emp.getSalary()));
-            }
-            companyClient.setEmployees(employees);
-            getServletContext().setAttribute("start", false);
-            getServletContext().setAttribute("company", companyClient);
-            return companyClient;
+        for (Employee employee: company.getEmployees()) {
+            employeesJSON.add(employee.toJSON());
+        }
+        try {
+            responseJSON.put("employee", employeesJSON);
+            responseJSON.put("company", company.toJSON());
+            responseJSON.put("totalProfit", totalProfit);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return responseJSON.toString();
     }
 
     @Override
-    public List<EmployeeClient> doSort(String typeOfSorting, Integer companyId, String storage) throws GenerateCompanyException {
+    public String doSort(String typeOfSorting, Integer companyId, String storage) throws GenerateCompanyException {
         List<Employee> sortedEmployee = new ArrayList<>();
-        List<EmployeeClient> sortedEmployeeClient = new ArrayList<>();
+        JSONObject responseJSON = new JSONObject();
+        List<JSONObject> employeesJSON = new LinkedList<JSONObject>();
         EmployeeDao employeeDao = null;
         switch (storage) {
             case "JDBC":
@@ -109,15 +110,15 @@ public class SimulateServiceImpl extends RemoteServiceServlet implements Simulat
                 sortedEmployee = employeeDao.orderBySalary(companyId);
                 break;
         }
-        for(Employee employee: sortedEmployee) {
-            EmployeeClient emp = new EmployeeClient();
-            emp.setId(employee.getId());
-            emp.setFirstName(employee.getFirstName());
-            emp.setSecondName(employee.getSecondName());
-            emp.setSalary(employee.getSalary());
-            sortedEmployeeClient.add(emp);
+        for (Employee employee: sortedEmployee) {
+            employeesJSON.add(employee.toJSON());
         }
-        return sortedEmployeeClient;
+        try {
+            responseJSON.put("employee", employeesJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return responseJSON.toString();
     }
 
     private void checkAttribute(String companyName, String storage, Boolean start) throws GenerateCompanyException {

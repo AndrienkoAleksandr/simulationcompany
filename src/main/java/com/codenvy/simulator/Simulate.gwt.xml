@@ -3,7 +3,7 @@
 <module rename-to="Simulate">
 
     <inherits name='com.google.gwt.user.User'/>
-
+    <inherits name="com.google.gwt.json.JSON"/>
     <entry-point class='com.codenvy.simulator.client.Simulate'/>
     <servlet path="/Simulate" class="com.codenvy.simulator.server.SimulateServiceImpl"/>
 

@@ -1,19 +1,18 @@
 package com.codenvy.simulator.client;
 
-import com.codenvy.simulator.client.entity.CompanyClient;
-import com.codenvy.simulator.client.entity.EmployeeClient;
-import com.codenvy.simulator.client.exception.GenerateCompanyException;
 import com.google.gwt.core.client.EntryPoint;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-
-import java.util.List;
 
 /**
  * Created by Andrienko Aleksander on 28.04.14.
@@ -34,8 +33,11 @@ public class Simulate implements EntryPoint {
     private Button sorting = new Button("Sort");
     private SimulateServiceAsync simulateServiceAsync;
     private Label errorLabel = new Label();
-    private CompanyClient company;
     private String typeOfSorting = Constant.sortingList[1];
+
+    private JSONArray employees;
+    private JSONObject company;
+    private double totalProfit;
 
     public void onModuleLoad() {
         employeesTable.setText(0, 0, "Employee");
@@ -49,17 +51,17 @@ public class Simulate implements EntryPoint {
 
     private void drawDataOfCompany(){
             simulateServiceAsync = SimulateService.App.getInstance();
-            AsyncCallback<CompanyClient> callback = new AsyncCallback<CompanyClient>() {
+            AsyncCallback<String> callback = new AsyncCallback<String>() {
                 @Override
                 public void onFailure(Throwable throwable) {
                     errorLabel.setText("Connection failed!!!");
                 }
                 @Override
-                public void onSuccess(CompanyClient data) {
+                public void onSuccess(String data) {
                     if (data == null) {
                         Window.Location.replace("/error/404.jsp");
                     }
-                    company = data;
+                    parseStringToJSON(data);
                     drawTopDataOfCompany();
                     drawEmployeeTable();
                     drawRadioButtonPanel();
@@ -69,9 +71,17 @@ public class Simulate implements EntryPoint {
             simulateServiceAsync.generateCompany(callback);
         }
 
+    private void parseStringToJSON(String data) {
+        JSONValue value = JSONParser.parseStrict(data);
+        JSONObject dataJSON = value.isObject();
+        company = dataJSON.get("company").isObject();
+        employees = dataJSON.get("employee").isArray();
+        totalProfit = dataJSON.get("totalProfit").isNumber().doubleValue();
+    }
+
     private void drawTopDataOfCompany() {
-        companyNameValue.setText(company.getFullName());
-        companyTotalMoneyValue.setText(String.valueOf(company.getTotalMoney()));
+        companyNameValue.setText(company.get("fullName").isString().stringValue());
+        companyTotalMoneyValue.setText(String.valueOf(totalProfit));
         topPanel.add(companyName);
         topPanel.add(companyNameValue);
         topPanel.add(companyTotalMoney);
@@ -81,9 +91,11 @@ public class Simulate implements EntryPoint {
 
     private void drawEmployeeTable() {
         int row = 1;
-        for (EmployeeClient emp: company.getEmployees()) {
-            String fullName = emp.getFirstName() + " " + emp.getSecondName();
-            String salary = String.valueOf(emp.getSalary());
+        for(int i = 0; i < employees.size(); i++) {
+            JSONObject employee = employees.get(i).isObject();
+            String fullName = employee.get("firstName").isString().stringValue() + " "
+                    + employee.get("secondName").isString().stringValue();
+            String salary = String.valueOf(employee.get("salary").isNumber().doubleValue());
             employeesTable.setText(row, 0, fullName);
             employeesTable.setText(row, 1, salary);
             row++;
@@ -122,22 +134,25 @@ public class Simulate implements EntryPoint {
 
     private void doSort() {
         simulateServiceAsync = SimulateService.App.getInstance();
-        AsyncCallback<List<EmployeeClient>> callback = new AsyncCallback<List<EmployeeClient>>() {
+        AsyncCallback<String> callback = new AsyncCallback<String>() {
             @Override
             public void onFailure(Throwable throwable) {
                 Window.alert("error " + throwable.toString());
             }
             @Override
-            public void onSuccess(List<EmployeeClient> data) {
-                company.setEmployees(data);
+            public void onSuccess(String data) {
+                JSONValue value = JSONParser.parseStrict(data);
+                JSONObject dataJSON = value.isObject();
+                employees = dataJSON.get("employee").isArray();
                 drawEmployeeTable();
             }
         };
-        simulateServiceAsync.doSort(typeOfSorting, company.getId(), company.getTypeOfSavingData(), callback);
+        simulateServiceAsync.doSort(typeOfSorting, (int)company.get("id").isNumber().doubleValue(),
+                company.get("typeOfSavingData").isString().stringValue(), callback);
     }
 
     private void drawBottomDataOfCompany() {
-        companyProfitValue.setText(String.valueOf(company.getProfit()));
+        companyProfitValue.setText(String.valueOf(totalProfit));
         bottomPanel.add(companyProfit);
         bottomPanel.add(companyProfitValue);
         bottomPanel.add(errorLabel);
