@@ -1,68 +1,42 @@
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
-         version="3.1">
-
-    <welcome-file-list>
-        <welcome-file>IndexController</welcome-file>
-    </welcome-file-list>
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         version="2.5">
 
     <servlet>
-        <servlet-name>IndexServlet</servlet-name>
-        <servlet-class>com.codenvy.simulator.servlet.index.IndexServlet</servlet-class>
+        <servlet-name>simulatorService</servlet-name>
+        <servlet-class>com.codenvy.simulator.server.SimulateServiceImpl</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>IndexServlet</servlet-name>
-        <url-pattern>/index</url-pattern>
-    </servlet-mapping>
-
     <servlet>
-        <servlet-name>RunController</servlet-name>
-        <servlet-class>com.codenvy.simulator.servlet.run.RunServlet</servlet-class>
+        <servlet-name>StartService</servlet-name>
+        <servlet-class>com.codenvy.simulator.server.StartServiceImpl</servlet-class>
     </servlet>
-
     <servlet-mapping>
-        <servlet-name>RunController</servlet-name>
-        <url-pattern>/run</url-pattern>
+        <servlet-name>simulatorService</servlet-name>
+        <url-pattern>/Simulate/Simulate</url-pattern>
     </servlet-mapping>
-
     <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.css</url-pattern>
+        <servlet-name>StartService</servlet-name>
+        <url-pattern>/Start/Start</url-pattern>
     </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>*.jpg</url-pattern>
-    </servlet-mapping>
-
-    <filter>
-        <filter-name>RunFilter</filter-name>
-        <filter-class>com.codenvy.simulator.servlet.run.RunFilter</filter-class>
-    </filter>
-
-    <filter-mapping>
-        <filter-name>RunFilter</filter-name>
-        <servlet-name>RunController</servlet-name>
-    </filter-mapping>
 
     <error-page>
         <error-code>500</error-code>
         <location>/error/500.jsp</location>
     </error-page>
-
     <error-page>
         <error-code>404</error-code>
         <location>/error/404.jsp</location>
     </error-page>
-
     <error-page>
         <exception-type>java.lang.Exception</exception-type>
         <location>/error/exception.jsp</location>
     </error-page>
 
     <listener>
-        <listener-class>com.codenvy.simulator.servlet.listener.Listener</listener-class>
+        <listener-class>com.codenvy.simulator.server.listener.Listener</listener-class>
     </listener>
 
-</web-app>
+ </web-app>

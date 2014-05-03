@@ -1,5 +1,8 @@
 package com.codenvy.simulator.entity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.persistence.*;
 import java.sql.Date;
 
@@ -19,7 +22,6 @@ public abstract class Employee {
 
     @Column(name = "first_name")
     private String firstName;
-
 
     @Column(name = "second_name")
     private String secondName;
@@ -97,5 +99,20 @@ public abstract class Employee {
 
     public void setSecondName(String secondName) {
         this.secondName = secondName;
+    }
+
+    public JSONObject toJSON() {
+        JSONObject employeeObject = new JSONObject();
+        try {
+            employeeObject.put("id", id);
+            employeeObject.put("firstName", firstName);
+            employeeObject.put("secondName", secondName);
+            employeeObject.put("salary", salary);
+            employeeObject.put("idCompany", idCompany);
+            employeeObject.put("dataOfBirth", dataOfBirth);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return employeeObject;
     }
 }

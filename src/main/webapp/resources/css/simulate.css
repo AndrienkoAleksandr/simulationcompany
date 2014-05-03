@@ -1,0 +1,29 @@
+.ScrollBlock {
+    margin-left: 30%;
+    margin-top: 2%;
+    height: 410px;
+    width: 420px;
+    overflow: auto;
+    background: olive;
+}
+
+.sort {
+    height: 16%;
+    margin: -30% 0 1% 76%;
+    width: 18%;
+}
+
+.companyInfoBegin {
+    margin-left: 40%;
+    width: 28%;
+    overflow: auto;
+    overflow-x: hidden;
+}
+
+.companyInfoEnd {
+    margin-top: 20%;
+    margin-left: 40%;
+    width: 28%;
+    overflow: auto;
+    overflow-x: hidden;
+}
