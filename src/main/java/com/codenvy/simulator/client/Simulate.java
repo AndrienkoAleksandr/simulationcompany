@@ -2,7 +2,6 @@ package com.codenvy.simulator.client;
 
 import com.codenvy.simulator.client.entity.CompanyClient;
 import com.codenvy.simulator.client.entity.EmployeeClient;
-import com.codenvy.simulator.client.exception.GenerateCompanyException;
 import com.google.gwt.core.client.EntryPoint;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -10,10 +9,9 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-
-import java.util.List;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
 /**
  * Created by Andrienko Aleksander on 28.04.14.
@@ -25,14 +23,11 @@ public class Simulate implements EntryPoint {
     private FlexTable employeesTable = new FlexTable();
     private Label companyName = new Label("Company name:");
     private Label companyNameValue = new Label();
-    private Label companyTotalMoney = new Label("Company earned:");
-    private Label companyTotalMoneyValue = new Label();
     private Label employeeListLabel = new Label("Company pay salary to staff:");
     private Label companyProfit = new Label("Company profit after payment salary:");
     private Label companyProfitValue = new Label();
     private RadioButton[] radioButtons = new RadioButton[Constant.sortingList.length];
     private Button sorting = new Button("Sort");
-    private SimulateServiceAsync simulateServiceAsync;
     private Label errorLabel = new Label();
     private CompanyClient company;
     private String typeOfSorting = Constant.sortingList[1];
@@ -48,34 +43,34 @@ public class Simulate implements EntryPoint {
     }
 
     private void drawDataOfCompany(){
-            simulateServiceAsync = SimulateService.App.getInstance();
-            AsyncCallback<CompanyClient> callback = new AsyncCallback<CompanyClient>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    errorLabel.setText("Connection failed!!!");
+        String id = Window.Location.getParameter("id");
+        String storage = Window.Location.getParameter("storage");
+        SimulateServiceAsync.Util.get(id, storage).getCompany(new MethodCallback<CompanyClient>() {
+
+            @Override
+            public void onSuccess(Method method, CompanyClient data) {
+                if (data == null) {
+                    Window.Location.replace("/error/404.jsp");
                 }
-                @Override
-                public void onSuccess(CompanyClient data) {
-                    if (data == null) {
-                        Window.Location.replace("/error/404.jsp");
-                    }
-                    company = data;
-                    drawTopDataOfCompany();
-                    drawEmployeeTable();
-                    drawRadioButtonPanel();
-                    drawBottomDataOfCompany();
-                }
-            };
-            simulateServiceAsync.generateCompany(callback);
+                company = data;
+                drawTopDataOfCompany();
+                drawEmployeeTable();
+                drawRadioButtonPanel();
+                drawBottomDataOfCompany();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                Window.alert("Error while loading persons! Cause: "
+                        + exception.getMessage());
+            }
+        });
         }
 
     private void drawTopDataOfCompany() {
         companyNameValue.setText(company.getFullName());
-        companyTotalMoneyValue.setText(String.valueOf(company.getTotalMoney()));
         topPanel.add(companyName);
         topPanel.add(companyNameValue);
-        topPanel.add(companyTotalMoney);
-        topPanel.add(companyTotalMoneyValue);
         topPanel.add(employeeListLabel);
     }
 
@@ -121,19 +116,7 @@ public class Simulate implements EntryPoint {
     }
 
     private void doSort() {
-        simulateServiceAsync = SimulateService.App.getInstance();
-        AsyncCallback<List<EmployeeClient>> callback = new AsyncCallback<List<EmployeeClient>>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-                Window.alert("error " + throwable.toString());
-            }
-            @Override
-            public void onSuccess(List<EmployeeClient> data) {
-                company.setEmployees(data);
-                drawEmployeeTable();
-            }
-        };
-        simulateServiceAsync.doSort(typeOfSorting, company.getId(), company.getTypeOfSavingData(), callback);
+
     }
 
     private void drawBottomDataOfCompany() {

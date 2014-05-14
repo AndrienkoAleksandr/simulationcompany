@@ -4,6 +4,9 @@ import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.util.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.criterion.Expression;
+
+import java.util.List;
 
 import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 
@@ -49,5 +52,26 @@ public class CompanyDaoImplHibernate implements CompanyDao {
                 session.close();
             }
         }
+    }
+
+    @Override
+    public Company getCompanyById(int idCompany) {
+        Session session = null;
+        List<Company> company = null;
+        try {
+            session = getSession();
+            session.beginTransaction();
+            company = session.createCriteria(Company.class)
+                    .add(Expression.like("id", idCompany))
+                    .list();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return company.get(0);
     }
 }

@@ -13,5 +13,6 @@ public interface EmployeeDao {
     public List<Employee> orderByFirstName(int idCompany);
     public List<Employee> orderByLastName(int idCompany);
     public List<Employee> orderBySalary(int idCompany);
+    public List<Employee> getEmployeesByCompanyId(int idCompany);
 
 }

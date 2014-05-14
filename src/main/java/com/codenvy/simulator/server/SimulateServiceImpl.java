@@ -15,7 +15,6 @@ import com.codenvy.simulator.module.FileModule;
 import com.codenvy.simulator.module.HibernateModule;
 import com.codenvy.simulator.module.JDBCModule;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.codenvy.simulator.client.SimulateService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -27,9 +26,8 @@ import java.util.List;
 /**
  * Created by Andrienko Aleksander on 28.04.14.
  */
-public class SimulateServiceImpl extends RemoteServiceServlet implements SimulateService {
+public class SimulateServiceImpl extends RemoteServiceServlet {
 
-    @Override
     public CompanyClient generateCompany() throws GenerateCompanyException {
         Boolean start = (Boolean) getServletContext().getAttribute("start");
         if (!start) {
@@ -82,7 +80,6 @@ public class SimulateServiceImpl extends RemoteServiceServlet implements Simulat
             return companyClient;
     }
 
-    @Override
     public List<EmployeeClient> doSort(String typeOfSorting, Integer companyId, String storage) throws GenerateCompanyException {
         List<Employee> sortedEmployee = new ArrayList<>();
         List<EmployeeClient> sortedEmployeeClient = new ArrayList<>();

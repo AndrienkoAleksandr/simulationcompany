@@ -20,6 +20,9 @@
         <guice.version>3.0</guice.version>
         <standard.version>1.1.2</standard.version>
         <gwt.version>2.6.0</gwt.version>
+        <jersey.version>1.18.1</jersey.version>
+        <asm.version>3.3.1</asm.version>
+        <restygwt.version>1.4</restygwt.version>
     </properties>
 
     <dependencies>
@@ -84,12 +87,7 @@
             <version>${gwt.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
+
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-dev</artifactId>
@@ -98,10 +96,45 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwt.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- Jersey dependencies -->
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-bundle</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>${asm.version}</version>
+        </dependency>
+        <!-- restGWT -->
+        <dependency>
+            <groupId>org.fusesource.restygwt</groupId>
+            <artifactId>restygwt</artifactId>
+            <version>${restygwt.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20090211</version>
         </dependency>
+
     </dependencies>
 
 

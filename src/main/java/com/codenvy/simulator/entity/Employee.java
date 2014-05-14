@@ -32,7 +32,7 @@ public abstract class Employee {
     @Column(name = "company_id")
     private Integer idCompany;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="company_id", referencedColumnName="id" ,insertable = false, updatable = false)
     private Company company;
 

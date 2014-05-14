@@ -1,4 +1,4 @@
-package com.codenvy.simulator.server.listener;
+package com.codenvy.simulator.restful.listener;
 
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSessionBindingEvent;
 import java.util.Date;
 
 /**
- * Created by first on 21.04.14.
+ * Created by Andrienko Aleksander on 21.04.14.
  */
 public class Listener implements HttpSessionAttributeListener, ServletRequestListener {
     @Override

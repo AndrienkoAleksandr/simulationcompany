@@ -1,10 +1,13 @@
 package com.codenvy.simulator.dao.jdbc;
 
 import com.codenvy.simulator.dao.CompanyDao;
+import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.util.DatabaseConnection;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Andrienko Aleksander on 24.03.14.
@@ -74,5 +77,40 @@ public class CompanyDaoImplJDBC implements CompanyDao{
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Company getCompanyById(int idCompany) {
+        Connection connection = DatabaseConnection.getConnection();
+        String sql = "SELECT * FROM Company WHERE id = ?";
+        List<Company> companies = new ArrayList<>();
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, idCompany);
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                Company company = new Company();
+                company.setId(resultSet.getInt("id"));
+                company.setTypeOfSavingData(resultSet.getString("type_saving_data"));
+                company.setProfit(resultSet.getDouble("profit"));
+                company.setFullName(resultSet.getString("full_name"));
+                EmployeeDao employeeDao = new EmployeeDaoImplJDBC();
+                company.setEmployees(employeeDao.getEmployeesByCompanyId(idCompany));
+                companies.add(company);
+
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return companies.get(0);
     }
 }

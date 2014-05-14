@@ -25,7 +25,7 @@ public class Company {
     @Column(name = "full_name")
     private String fullName;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
     private List<Employee> employees;
 
     @Column(name = "profit")

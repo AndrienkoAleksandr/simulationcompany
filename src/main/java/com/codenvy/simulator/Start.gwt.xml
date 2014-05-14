@@ -2,14 +2,11 @@
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <module rename-to="Start">
 
-    <!-- Inherit the core Web Toolkit stuff.                  -->
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
 
-    <!-- Specify the app entry point class.                   -->
     <entry-point class='com.codenvy.simulator.client.Start'/>
 
-
-    <!-- Specify the app servlets.                   -->
-    <servlet path='/Start' class='com.codenvy.simulator.server.StartServiceImpl'/>
+    <source path='client'/>
 
 </module>

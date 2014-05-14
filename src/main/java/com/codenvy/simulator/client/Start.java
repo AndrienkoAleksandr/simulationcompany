@@ -1,7 +1,7 @@
 package com.codenvy.simulator.client;
 
+import com.codenvy.simulator.client.entity.CompanyClient;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -9,13 +9,24 @@ import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import org.fusesource.restygwt.client.Defaults;
+import org.fusesource.restygwt.client.Method;
+import org.fusesource.restygwt.client.MethodCallback;
 
 /**
  * Created by Andrienko Aleksander on 28.04.14.
  */
+
 public class Start implements EntryPoint {
+
+    static {
+        // if you don't do this, on JSON response you'll get something like
+        // this:
+        // "Could not parse response: org.fusesource.restygwt.client.ResponseFormatException: Response was NOT a valid JSON document"
+        Defaults.setDateFormat(null);
+    }
+
     private VerticalPanel initTopPanel = new VerticalPanel();
     private VerticalPanel initBottomPanel = new VerticalPanel();
     private Label choseStorage = new Label("Save date with: ");
@@ -27,14 +38,13 @@ public class Start implements EntryPoint {
     private String typeOfStorage = Constant.storageList[0];
     private RadioButton[] radioButtons = new RadioButton[Constant.storageList.length];
     private PushButton startButton;
-    private StartServiceAsync startService;
-    private Image startImage =  new Image("/resources/img/run.jpg");
+    private Image startImage = new Image("/resources/img/run.jpg");
 
     public void onModuleLoad() {
         initTopPanel.add(choseStorage);
         String[] storageList = Constant.storageList;
         int i = 0;
-        for (RadioButton radioButton: radioButtons) {
+        for (RadioButton radioButton : radioButtons) {
             String storage = storageList[i];
             radioButton = new RadioButton("storage", storage);
             radioButton.ensureDebugId(
@@ -72,11 +82,11 @@ public class Start implements EntryPoint {
         startButton.addStyleName("start_button");
         startButton.addClickHandler(new ClickHandler() {
             @Override
-            public void onClick(ClickEvent clickEvent) {
-                setCompanyName(companyNameInput.getText());
-                sendDateToServer();
+            public synchronized void onClick(ClickEvent event) {
+                loadCompany();
             }
         });
+
         initBottomPanel.add(startButton);
         initBottomPanel.add(errors);
         RootPanel.get("start-top-panel").add(initTopPanel);
@@ -93,21 +103,26 @@ public class Start implements EntryPoint {
         companyName = companyNameInput.getText();
     }
 
-    private void sendDateToServer() {
-        if (startService == null) {
-            startService = GWT.create(StartService.class);
-        }
-        AsyncCallback<Void> callback = new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable throwable) {
-            errors.setText("Connection failed!!!");
-            }
+    private void loadCompany() {
 
-            @Override
-            public void onSuccess(Void avoid) {
-                Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
-            }
-        };
-        startService.startGenerator(companyName, typeOfStorage, callback);
+        StartServiceAsync.Util.get(companyName, typeOfStorage).createCompany(
+                new MethodCallback<CompanyClient>() {
+
+                    @Override
+                    public void onSuccess(Method method, CompanyClient company) {
+                        Window.Location.replace("/simulate.html?id" + "=" +
+                                company.getId() + "&storage=" + company.getTypeOfSavingData() +
+                                "&gwt.codesvr=127.0.0.1:9997");
+                    }
+
+                    @Override
+                    public void onFailure(Method method, Throwable exception) {
+                        Window.alert("Error while loading persons! Cause: "
+                                + exception.getMessage());
+                    }
+                }
+        );
+//        Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
     }
+
 }

@@ -123,7 +123,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
         return employee;
     }
 
-    public List<Employee> getAllEmployeeByIdCompany(int idCompany) {
+    public List<Employee> getEmployeesByCompanyId(int idCompany) {
         List<String> listLineEmployee = fileManager.readFile(path);
         List<Employee> employees = new ArrayList<Employee>();
 
@@ -138,21 +138,21 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
 
     @Override
     public List<Employee> orderByFirstName(int idCompany) {
-        List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
+        List<Employee> employees = getEmployeesByCompanyId(idCompany);
         Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_FIRST_NAME));
         return employees;
     }
 
     @Override
     public List<Employee> orderBySalary(int idCompany) {
-        List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
+        List<Employee> employees = getEmployeesByCompanyId(idCompany);
         Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_SALARY));
         return employees;
     }
 
     @Override
     public List<Employee> orderByLastName(int idCompany) {
-        List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
+        List<Employee> employees = getEmployeesByCompanyId(idCompany);
         Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_SECOND_NAME));
         return employees;
     }

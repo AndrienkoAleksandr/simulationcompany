@@ -111,6 +111,20 @@ public class EmployeeDaoImplJDBC  implements EmployeeDao {
     }
 
     @Override
+    public List<Employee> getEmployeesByCompanyId(int idCompany) {
+        Connection connection = DatabaseConnection.getConnection();
+        String sql = "SELECT * FROM Employees WHERE Company_id = ?";
+        PreparedStatement statement = null;
+        try {
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, idCompany);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return doPrepareStatement(statement, connection);
+    }
+
+    @Override
     public List<Employee> orderByLastName(int idCompany) {
         Connection connection = DatabaseConnection.getConnection();
         String sql = "SELECT * FROM Employees WHERE Company_id = ? ORDER BY second_name";

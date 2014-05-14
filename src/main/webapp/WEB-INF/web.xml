@@ -6,21 +6,28 @@
          version="2.5">
 
     <servlet>
-        <servlet-name>simulatorService</servlet-name>
-        <servlet-class>com.codenvy.simulator.server.SimulateServiceImpl</servlet-class>
+        <servlet-name>jersey-rest</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>com.codenvy.simulator.restful</param-value>
+        </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
-    <servlet>
-        <servlet-name>StartService</servlet-name>
-        <servlet-class>com.codenvy.simulator.server.StartServiceImpl</servlet-class>
-    </servlet>
+
     <servlet-mapping>
-        <servlet-name>simulatorService</servlet-name>
-        <url-pattern>/Simulate/Simulate</url-pattern>
+        <servlet-name>jersey-rest</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>StartService</servlet-name>
-        <url-pattern>/Start/Start</url-pattern>
-    </servlet-mapping>
+
+    <!-- Default page to serve -->
+    <welcome-file-list>
+        <welcome-file>start.html</welcome-file>
+    </welcome-file-list>
 
     <error-page>
         <error-code>500</error-code>
@@ -36,7 +43,7 @@
     </error-page>
 
     <listener>
-        <listener-class>com.codenvy.simulator.server.listener.Listener</listener-class>
+        <listener-class>com.codenvy.simulator.restful.listener.Listener</listener-class>
     </listener>
 
  </web-app>

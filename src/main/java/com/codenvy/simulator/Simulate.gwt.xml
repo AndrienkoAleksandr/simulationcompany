@@ -3,8 +3,10 @@
 <module rename-to="Simulate">
 
     <inherits name='com.google.gwt.user.User'/>
+    <inherits name="org.fusesource.restygwt.RestyGWT"/>
 
     <entry-point class='com.codenvy.simulator.client.Simulate'/>
-    <servlet path="/Simulate" class="com.codenvy.simulator.server.SimulateServiceImpl"/>
+
+    <source path='client'/>
 
 </module>

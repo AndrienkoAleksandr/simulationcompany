@@ -2,6 +2,7 @@ package com.codenvy.simulator.dao.file;
 
 import com.codenvy.simulator.constant.Constant;
 import com.codenvy.simulator.dao.CompanyDao;
+import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.entity.Company;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,6 +51,17 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         lines.addAll(fileManager.readFile(path));
         lines.remove(findLineForId(company.getId(), lines));
         fileManager.writeToFile(path, lines);
+    }
+
+    @Override
+    public Company getCompanyById(int idCompany) {
+        Company company = findCompanyForId(idCompany);
+        if (company != null) {
+            EmployeeDao employeeDao = new EmployeeDaoImplFile();
+            company.setEmployees(employeeDao.getEmployeesByCompanyId(idCompany));
+            return company;
+        }
+        return null;
     }
 
     public Company findCompanyForId(int id) {

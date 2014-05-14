@@ -52,7 +52,6 @@ public class EmployeeDaoImplHibernate implements EmployeeDao {
             if (session != null && session.isOpen()) {
                 session.close();
             }
-            HibernateUtil.stopConnectionProvider();
         }
     }
 
@@ -87,6 +86,27 @@ public class EmployeeDaoImplHibernate implements EmployeeDao {
             session.beginTransaction();
             employeeList = session.createCriteria(Employee.class)
                     .addOrder(Order.asc("salary"))
+                    .add(Expression.like("idCompany", idCompany))
+                    .list();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            printStackTrace();
+        } finally {
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+        }
+        return employeeList;
+    }
+
+    @Override
+    public List<Employee> getEmployeesByCompanyId(int idCompany) {
+        Session session = null;
+        List<Employee> employeeList = null;
+        try {
+            session = getSession();
+            session.beginTransaction();
+            employeeList = session.createCriteria(Employee.class)
                     .add(Expression.like("idCompany", idCompany))
                     .list();
             session.getTransaction().commit();
