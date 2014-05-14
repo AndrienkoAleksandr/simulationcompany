@@ -10,13 +10,24 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
+
+import java.util.List;
 
 /**
  * Created by Andrienko Aleksander on 28.04.14.
  */
 public class Simulate implements EntryPoint {
+
+    static {
+        // if you don't do this, on JSON response you'll get something like
+        // this:
+        // "Could not parse response: ResponseFormatException: Response was NOT a valid JSON document"
+        Defaults.setDateFormat(null);
+    }
+
     private VerticalPanel topPanel = new VerticalPanel();
     private VerticalPanel radioButtonPanel = new VerticalPanel();
     private VerticalPanel bottomPanel = new VerticalPanel();
@@ -30,7 +41,7 @@ public class Simulate implements EntryPoint {
     private Button sorting = new Button("Sort");
     private Label errorLabel = new Label();
     private CompanyClient company;
-    private String typeOfSorting = Constant.sortingList[1];
+    private String typeOfSorting = Constant.sortingList[2];
 
     public void onModuleLoad() {
         employeesTable.setText(0, 0, "Employee");
@@ -45,12 +56,13 @@ public class Simulate implements EntryPoint {
     private void drawDataOfCompany(){
         String id = Window.Location.getParameter("id");
         String storage = Window.Location.getParameter("storage");
+        final String sorting = Window.Location.getParameter("sorting");
         SimulateServiceAsync.Util.get(id, storage).getCompany(new MethodCallback<CompanyClient>() {
 
             @Override
             public void onSuccess(Method method, CompanyClient data) {
                 if (data == null) {
-                    Window.Location.replace("/error/404.jsp");
+                        Window.Location.replace("/error/404.jsp");
                 }
                 company = data;
                 drawTopDataOfCompany();
@@ -116,6 +128,25 @@ public class Simulate implements EntryPoint {
     }
 
     private void doSort() {
+        String id = Window.Location.getParameter("id");
+        String storage = Window.Location.getParameter("storage");
+        SimulateServiceAsync.Util.sort(id, storage, typeOfSorting).sortCompany(new MethodCallback<List<EmployeeClient>>() {
+
+            @Override
+            public void onSuccess(Method method, List<EmployeeClient> data) {
+                if (data == null) {
+                    Window.Location.replace("/error/404.jsp");
+                }
+                company.setEmployees(data);
+                drawEmployeeTable();
+            }
+
+            @Override
+            public void onFailure(Method method, Throwable exception) {
+                Window.alert("Error while loading persons! Cause: "
+                        + exception.getMessage());
+            }
+        });
 
     }
 

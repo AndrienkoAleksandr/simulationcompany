@@ -23,7 +23,7 @@ public class Start implements EntryPoint {
     static {
         // if you don't do this, on JSON response you'll get something like
         // this:
-        // "Could not parse response: org.fusesource.restygwt.client.ResponseFormatException: Response was NOT a valid JSON document"
+        // "Could not parse response: ResponseFormatException: Response was NOT a valid JSON document"
         Defaults.setDateFormat(null);
     }
 
@@ -82,11 +82,10 @@ public class Start implements EntryPoint {
         startButton.addStyleName("start_button");
         startButton.addClickHandler(new ClickHandler() {
             @Override
-            public synchronized void onClick(ClickEvent event) {
+            public void onClick(ClickEvent event) {
                 loadCompany();
             }
         });
-
         initBottomPanel.add(startButton);
         initBottomPanel.add(errors);
         RootPanel.get("start-top-panel").add(initTopPanel);
@@ -110,7 +109,7 @@ public class Start implements EntryPoint {
 
                     @Override
                     public void onSuccess(Method method, CompanyClient company) {
-                        Window.Location.replace("/simulate.html?id" + "=" +
+                        Window.Location.replace("/simulate.html?id=" +
                                 company.getId() + "&storage=" + company.getTypeOfSavingData() +
                                 "&gwt.codesvr=127.0.0.1:9997");
                     }
@@ -122,7 +121,6 @@ public class Start implements EntryPoint {
                     }
                 }
         );
-//        Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
     }
 
 }

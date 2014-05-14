@@ -5,8 +5,6 @@ import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.generator.RandomGenerator;
 import com.google.inject.Inject;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.List;
@@ -147,18 +145,5 @@ public class Company {
             }
             setProfit(getProfit() - salary);
         }
-    }
-
-    public JSONObject toJSON() {
-        JSONObject companyObject = new JSONObject();
-        try {
-            companyObject.put("id", id);
-            companyObject.put("fullName", fullName);
-            companyObject.put("profit", profit);
-            companyObject.put("typeOfSavingData", typeOfSavingData);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return companyObject;
     }
 }

@@ -5,10 +5,13 @@ import com.codenvy.simulator.client.entity.EmployeeClient;
 import com.codenvy.simulator.client.exception.GenerateCompanyException;
 import com.codenvy.simulator.constant.Constant;
 import com.codenvy.simulator.dao.CompanyDao;
+import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.dao.file.CompanyDaoImplFile;
 import com.codenvy.simulator.dao.file.EmployeeDaoImplFile;
 import com.codenvy.simulator.dao.hibernate.CompanyDaoImplHibernate;
+import com.codenvy.simulator.dao.hibernate.EmployeeDaoImplHibernate;
 import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
+import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.entity.Employee;
 import com.codenvy.simulator.module.FileModule;
@@ -40,7 +43,6 @@ public class CompanyResources {
     ) throws GenerateCompanyException {
         CompanyClient companyClient = new CompanyClient();
         List<EmployeeClient> employees = new ArrayList<EmployeeClient>();
-        checkAttribute(companyName, storage);
         Company company = null;
         Injector injector = null;
         switch (storage) {
@@ -59,6 +61,8 @@ public class CompanyResources {
                 EmployeeDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_EMPLOYEE_FILE);
                 CompanyDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_COMPANY_FILE);
                 break;
+            default:
+                return Response.status(Response.Status.NOT_FOUND).build();
         }
         if (company != null) {
             company.setFullName(companyName);
@@ -84,16 +88,7 @@ public class CompanyResources {
         return Response.ok().entity(companyClient).build();
     }
 
-    private void checkAttribute(String companyName, String storage) throws GenerateCompanyException {
-        if (storage == null) {
-            throw new GenerateCompanyException("type storage is empty");
-        }
-        if (companyName == null) {
-            throw new GenerateCompanyException("name company null!");
-        }
-    }
-
-    @Path("{id}")
+    @Path("get/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCompany(@Context ServletContext context,
@@ -115,6 +110,8 @@ public class CompanyResources {
                 EmployeeDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_EMPLOYEE_FILE);
                 CompanyDaoImplFile.path = Paths.get(path.toString() + Constant.PATH_TO_COMPANY_FILE);
                 break;
+            default:
+                return Response.status(Response.Status.NOT_FOUND).build();
         }
         if (companyDao != null) {
             company = companyDao.getCompanyById(Integer.parseInt(id));
@@ -140,5 +137,54 @@ public class CompanyResources {
         companyClient.setEmployees(employeeClients);
         return Response.ok().entity(companyClient).build();
     }
+
+    @Path("/sort/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response sortCompany(
+                                @QueryParam("storage") String storage,
+                                @PathParam("id") String id,
+                                @QueryParam("sorting") String typeOfSorting) {
+        int companyId = Integer.parseInt(id);
+         List<Employee> sortedEmployee = new ArrayList<>();
+        final List<EmployeeClient> sortedEmployeeClient = new ArrayList<>();
+        EmployeeDao employeeDao = null;
+        switch (storage) {
+            case "JDBC":
+                employeeDao = new EmployeeDaoImplJDBC();
+                break;
+            case "Hibernate":
+                employeeDao = new EmployeeDaoImplHibernate();
+                break;
+            case "Files":
+                employeeDao = new EmployeeDaoImplFile();
+                break;
+            default:
+                return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        switch (typeOfSorting) {
+            case "ByFirstName":
+                sortedEmployee = employeeDao.orderByFirstName(companyId);
+                break;
+            case "BySecondName":
+                sortedEmployee = employeeDao.orderByLastName(companyId);
+                break;
+            case "BySalary":
+                sortedEmployee = employeeDao.orderBySalary(companyId);
+                break;
+        }
+        for(Employee employee: sortedEmployee) {
+            EmployeeClient emp = new EmployeeClient();
+            emp.setId(employee.getId());
+            emp.setFirstName(employee.getFirstName());
+            emp.setSecondName(employee.getSecondName());
+            emp.setSalary(employee.getSalary());
+            sortedEmployeeClient.add(emp);
+        }
+        return Response.ok().
+                entity(new GenericEntity<List<EmployeeClient>>(sortedEmployeeClient) {
+        }).build();
+    }
+
 
 }
