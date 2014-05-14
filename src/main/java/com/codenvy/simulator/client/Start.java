@@ -8,8 +8,12 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import org.fusesource.restygwt.client.Defaults;
 import org.fusesource.restygwt.client.Method;
 import org.fusesource.restygwt.client.MethodCallback;
@@ -105,24 +109,46 @@ public class Start implements EntryPoint {
 
     private void loadCompany() {
 
-        StartServiceAsync.Util.get(companyName, typeOfStorage).createCompany(
-                new MethodCallback<CompanyClient>() {
+        String url = "rest/company?companyName=" + companyName + "&storage=" + typeOfStorage;
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
+        requestBuilder.setHeader("Content-Type", "application/json");
+        requestBuilder.setCallback(new RequestCallback() {
+            @Override
+            public void onResponseReceived(Request request, Response response) {
+                Window.alert("success");
+            }
 
-                    @Override
-                    public void onSuccess(Method method, CompanyClient company) {
-                        Window.Location.replace("/simulate.html?id" + "=" +
-                                company.getId() + "&storage=" + company.getTypeOfSavingData() +
-                                "&gwt.codesvr=127.0.0.1:9997");
-                    }
+            @Override
+            public void onError(Request request, Throwable exception) {
+                Window.alert("Error while loading persons! Cause: "
+                        + exception.getMessage());
+            }
+        });
 
-                    @Override
-                    public void onFailure(Method method, Throwable exception) {
-                        Window.alert("Error while loading persons! Cause: "
-                                + exception.getMessage());
-                    }
-                }
-        );
-//        Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
+        try {
+            requestBuilder.send();
+        } catch (RequestException e) {
+            e.printStackTrace();
+        }
+
+//        StartServiceAsync.Util.get(companyName, typeOfStorage).createCompany(
+//                new MethodCallback<CompanyClient>() {
+//
+//                    @Override
+//                    public void onSuccess(Method method, CompanyClient company) {
+//                        Window.Location.replace("/simulate.html?id" + "=" +
+//                                company.getId() + "&storage=" + company.getTypeOfSavingData() +
+//                                "&gwt.codesvr=127.0.0.1:9997");
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Method method, Throwable exception) {
+//                        Window.alert("Error while loading persons! Cause: "
+//                                + exception.getMessage());
+//                    }
+//                }
+//        );
+////        Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
+//    }
     }
-
 }

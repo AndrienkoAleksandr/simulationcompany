@@ -8,5 +8,5 @@
     <entry-point class='com.codenvy.simulator.client.Start'/>
 
     <source path='client'/>
-
+    <source path='entity'/>
 </module>
