@@ -82,7 +82,7 @@ public class Start implements EntryPoint {
         startButton.addStyleName("start_button");
         startButton.addClickHandler(new ClickHandler() {
             @Override
-            public synchronized void onClick(ClickEvent event) {
+            public void onClick(ClickEvent event) {
                 loadCompany();
             }
         });
