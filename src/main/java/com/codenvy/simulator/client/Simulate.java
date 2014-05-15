@@ -50,7 +50,6 @@ public class Simulate implements EntryPoint {
     private void drawDataOfCompany(){
         String id = Window.Location.getParameter("id");
         String storage = Window.Location.getParameter("storage");
-
         String url = "rest/company/get/" + id + "?storage=" + storage;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
         requestBuilder.setHeader("Content-Type", "application/json");

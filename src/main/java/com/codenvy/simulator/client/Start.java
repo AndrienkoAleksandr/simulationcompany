@@ -110,7 +110,7 @@ public class Start implements EntryPoint {
             @Override
             public void onResponseReceived(Request request, Response response) {
                 CompanyView companyView = deserializeFromJson(response.getText());
-                Window.Location.replace("/simulate.html?id" + "=" +
+                Window.Location.replace("/simulate.html?id=" +
                         companyView.getId() + "&storage=" + companyView.getTypeOfSavingData() +
                         "&gwt.codesvr=127.0.0.1:9997");
 
