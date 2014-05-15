@@ -3,7 +3,7 @@
 <module rename-to="Simulate">
 
     <inherits name='com.google.gwt.user.User'/>
-    <inherits name="org.fusesource.restygwt.RestyGWT"/>
+    <inherits name="com.google.web.bindery.autobean.AutoBean"/>
 
     <entry-point class='com.codenvy.simulator.client.Simulate'/>
 

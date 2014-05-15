@@ -181,10 +181,8 @@ public class CompanyResources {
             emp.setSalary(employee.getSalary());
             sortedEmployeeClient.add(emp);
         }
-        return Response.ok().
-                entity(new GenericEntity<List<EmployeeClient>>(sortedEmployeeClient) {
-        }).build();
+        CompanyClient companyClient = new CompanyClient();
+        companyClient.setEmployees(sortedEmployeeClient);
+        return Response.ok().entity(companyClient).build();
     }
-
-
 }

@@ -1,32 +1,26 @@
 package com.codenvy.simulator.client;
 
-import com.codenvy.simulator.client.entity.CompanyClient;
-import com.codenvy.simulator.client.entity.EmployeeClient;
+import com.codenvy.simulator.client.entity.*;
 import com.google.gwt.core.client.EntryPoint;
 
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.*;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
-import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
-
-import java.util.List;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 /**
  * Created by Andrienko Aleksander on 28.04.14.
  */
 public class Simulate implements EntryPoint {
 
-    static {
-        // if you don't do this, on JSON response you'll get something like
-        // this:
-        // "Could not parse response: org.fusesource.restygwt.client.ResponseFormatException: Response was NOT a valid JSON document"
-        Defaults.setDateFormat(null);
-    }
+    private MyBeanFactory companyAutoBean = GWT.create(MyBeanFactory.class);
 
     private VerticalPanel topPanel = new VerticalPanel();
     private VerticalPanel radioButtonPanel = new VerticalPanel();
@@ -40,8 +34,8 @@ public class Simulate implements EntryPoint {
     private RadioButton[] radioButtons = new RadioButton[Constant.sortingList.length];
     private Button sorting = new Button("Sort");
     private Label errorLabel = new Label();
-    private CompanyClient company;
-    private String typeOfSorting = Constant.sortingList[1];
+    private CompanyView company;
+    private String typeOfSorting = Constant.sortingList[2];
 
     public void onModuleLoad() {
         employeesTable.setText(0, 0, "Employee");
@@ -56,15 +50,14 @@ public class Simulate implements EntryPoint {
     private void drawDataOfCompany(){
         String id = Window.Location.getParameter("id");
         String storage = Window.Location.getParameter("storage");
-        final String sorting = Window.Location.getParameter("sorting");
-        SimulateServiceAsync.Util.get(id, storage).getCompany(new MethodCallback<CompanyClient>() {
 
+        String url = "rest/company/get/" + id + "?storage=" + storage;
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        requestBuilder.setHeader("Content-Type", "application/json");
+        requestBuilder.setCallback(new RequestCallback() {
             @Override
-            public void onSuccess(Method method, CompanyClient data) {
-                if (data == null) {
-                        Window.Location.replace("/error/404.jsp");
-                }
-                company = data;
+            public void onResponseReceived(Request request, Response response) {
+                company = deserializeFromJson(response.getText());
                 drawTopDataOfCompany();
                 drawEmployeeTable();
                 drawRadioButtonPanel();
@@ -72,11 +65,17 @@ public class Simulate implements EntryPoint {
             }
 
             @Override
-            public void onFailure(Method method, Throwable exception) {
+            public void onError(Request request, Throwable exception) {
                 Window.alert("Error while loading persons! Cause: "
                         + exception.getMessage());
             }
         });
+
+        try {
+            requestBuilder.send();
+        } catch (RequestException e) {
+            e.printStackTrace();
+        }
         }
 
     private void drawTopDataOfCompany() {
@@ -88,7 +87,7 @@ public class Simulate implements EntryPoint {
 
     private void drawEmployeeTable() {
         int row = 1;
-        for (EmployeeClient emp: company.getEmployees()) {
+        for (EmployeeView emp: company.getEmployees()) {
             String fullName = emp.getFirstName() + " " + emp.getSecondName();
             String salary = String.valueOf(emp.getSalary());
             employeesTable.setText(row, 0, fullName);
@@ -130,23 +129,28 @@ public class Simulate implements EntryPoint {
     private void doSort() {
         String id = Window.Location.getParameter("id");
         String storage = Window.Location.getParameter("storage");
-        SimulateServiceAsync.Util.sort(id, storage, typeOfSorting).sortCompany(new MethodCallback<List<EmployeeClient>>() {
-
+        String url = "rest/company/sort/" + id + "?storage=" + storage + "&sorting=" + typeOfSorting;
+        RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.GET, url);
+        requestBuilder.setHeader("Content-Type", "application/json");
+        requestBuilder.setCallback(new RequestCallback() {
             @Override
-            public void onSuccess(Method method, List<EmployeeClient> data) {
-                if (data == null) {
-                    Window.Location.replace("/error/404.jsp");
-                }
-                company.setEmployees(data);
+            public void onResponseReceived(Request request, Response response) {
+                CompanyView companyView = deserializeFromJson(response.getText());
+                company.setEmployees(companyView.getEmployees());
                 drawEmployeeTable();
             }
 
             @Override
-            public void onFailure(Method method, Throwable exception) {
+            public void onError(Request request, Throwable exception) {
                 Window.alert("Error while loading persons! Cause: "
                         + exception.getMessage());
             }
         });
+        try {
+            requestBuilder.send();
+        } catch (RequestException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -155,5 +159,15 @@ public class Simulate implements EntryPoint {
         bottomPanel.add(companyProfit);
         bottomPanel.add(companyProfitValue);
         bottomPanel.add(errorLabel);
+    }
+
+    String serializeToJson(CompanyView companyView) {
+        AutoBean<CompanyView> bean = AutoBeanUtils.getAutoBean(companyView);
+        return AutoBeanCodex.encode(bean).getPayload();
+    }
+
+    CompanyView deserializeFromJson(String json) {
+        AutoBean<CompanyView> bean = AutoBeanCodex.decode(companyAutoBean, CompanyView.class, json);
+        return bean.as();
     }
 }

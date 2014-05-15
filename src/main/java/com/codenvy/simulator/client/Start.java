@@ -1,7 +1,10 @@
 package com.codenvy.simulator.client;
 
-import com.codenvy.simulator.client.entity.CompanyClient;
+import com.codenvy.simulator.client.entity.MyBeanFactory;
+import com.codenvy.simulator.client.entity.CompanyView;
 import com.google.gwt.core.client.EntryPoint;
+
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -14,22 +17,12 @@ import com.google.gwt.user.client.ui.*;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
-import org.fusesource.restygwt.client.Defaults;
-import org.fusesource.restygwt.client.Method;
-import org.fusesource.restygwt.client.MethodCallback;
 
 /**
  * Created by Andrienko Aleksander on 28.04.14.
  */
 
 public class Start implements EntryPoint {
-
-    static {
-        // if you don't do this, on JSON response you'll get something like
-        // this:
-        // "Could not parse response: org.fusesource.restygwt.client.ResponseFormatException: Response was NOT a valid JSON document"
-        Defaults.setDateFormat(null);
-    }
 
     private VerticalPanel initTopPanel = new VerticalPanel();
     private VerticalPanel initBottomPanel = new VerticalPanel();
@@ -43,6 +36,8 @@ public class Start implements EntryPoint {
     private RadioButton[] radioButtons = new RadioButton[Constant.storageList.length];
     private PushButton startButton;
     private Image startImage = new Image("/resources/img/run.jpg");
+
+    private MyBeanFactory companyAutoBean = GWT.create(MyBeanFactory.class);
 
     public void onModuleLoad() {
         initTopPanel.add(choseStorage);
@@ -108,14 +103,17 @@ public class Start implements EntryPoint {
     }
 
     private void loadCompany() {
-
         String url = "rest/company?companyName=" + companyName + "&storage=" + typeOfStorage;
         RequestBuilder requestBuilder = new RequestBuilder(RequestBuilder.POST, url);
         requestBuilder.setHeader("Content-Type", "application/json");
         requestBuilder.setCallback(new RequestCallback() {
             @Override
             public void onResponseReceived(Request request, Response response) {
-                Window.alert("success");
+                CompanyView companyView = deserializeFromJson(response.getText());
+                Window.Location.replace("/simulate.html?id" + "=" +
+                        companyView.getId() + "&storage=" + companyView.getTypeOfSavingData() +
+                        "&gwt.codesvr=127.0.0.1:9997");
+
             }
 
             @Override
@@ -130,25 +128,15 @@ public class Start implements EntryPoint {
         } catch (RequestException e) {
             e.printStackTrace();
         }
+    }
 
-//        StartServiceAsync.Util.get(companyName, typeOfStorage).createCompany(
-//                new MethodCallback<CompanyClient>() {
-//
-//                    @Override
-//                    public void onSuccess(Method method, CompanyClient company) {
-//                        Window.Location.replace("/simulate.html?id" + "=" +
-//                                company.getId() + "&storage=" + company.getTypeOfSavingData() +
-//                                "&gwt.codesvr=127.0.0.1:9997");
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Method method, Throwable exception) {
-//                        Window.alert("Error while loading persons! Cause: "
-//                                + exception.getMessage());
-//                    }
-//                }
-//        );
-////        Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
-//    }
+    String serializeToJson(CompanyView companyView) {
+        AutoBean<CompanyView> bean = AutoBeanUtils.getAutoBean(companyView);
+        return AutoBeanCodex.encode(bean).getPayload();
+    }
+
+    CompanyView deserializeFromJson(String json) {
+        AutoBean<CompanyView> bean = AutoBeanCodex.decode(companyAutoBean, CompanyView.class, json);
+        return bean.as();
     }
 }
