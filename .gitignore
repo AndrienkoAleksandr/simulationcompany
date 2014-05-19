@@ -14,7 +14,11 @@ storage
 *.ipr
 *.iws
 .idea/
- 
+src/main/webapp/Simulate/
+src/main/webapp/Start/
+src/main/webapp/WEB-INF/classes/
+src/main/webappstorage
+
 ### Eclipse ###
 *.pydevproject
 .project

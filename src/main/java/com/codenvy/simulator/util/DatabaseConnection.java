@@ -37,9 +37,7 @@ public class DatabaseConnection {
     public static void getConfigParam() {
         URI urlCurrentClass = null;
         try {
-            urlCurrentClass = DatabaseConnection.class.getProtectionDomain().
-                    getCodeSource().getLocation().toURI();
-            Path path = Paths.get(urlCurrentClass);
+            Path path = Paths.get(DatabaseConnection.class.getResource("/").toURI());
             String configFileName = "hibernate.cfg.xml";
             Path configFilePath = Paths.get(path.toString(), configFileName);
             FileManager fileManager = FileManager.getInstance();
