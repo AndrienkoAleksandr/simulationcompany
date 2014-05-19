@@ -31,6 +31,9 @@ public class Company {
     @Column(name = "profit")
     private Double profit;
 
+    @Column(name = "total_profit")
+    private Double totalProfit;
+
     @Column(name = "type_saving_data")
     private String typeOfSavingData;
 
@@ -38,7 +41,7 @@ public class Company {
     private RandomGenerator generator = new RandomGenerator();
 
     @Transient
-     private EmployeeDao employeeDao;
+    private EmployeeDao employeeDao;
 
     @Transient
     private CompanyDao companyDao;
@@ -88,6 +91,14 @@ public class Company {
         this.profit = profit;
     }
 
+    public Double getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(Double totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
     public String getTypeOfSavingData() {
         return typeOfSavingData;
     }
@@ -126,6 +137,7 @@ public class Company {
     public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
         double earnedMoney = profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        setTotalProfit(earnedMoney);
         setProfit(earnedMoney);
         return earnedMoney;
     }
@@ -155,6 +167,7 @@ public class Company {
             companyObject.put("id", id);
             companyObject.put("fullName", fullName);
             companyObject.put("profit", profit);
+            companyObject.put("totalProfit", totalProfit);
             companyObject.put("typeOfSavingData", typeOfSavingData);
         } catch (JSONException e) {
             e.printStackTrace();

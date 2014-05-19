@@ -28,7 +28,7 @@ public class Start implements EntryPoint {
     private RadioButton[] radioButtons = new RadioButton[Constant.storageList.length];
     private PushButton startButton;
     private StartServiceAsync startService;
-    private Image startImage =  new Image("/resources/img/run.jpg");
+    private Image startImage =  new Image("resources/img/run.jpg");
 
     public void onModuleLoad() {
         initTopPanel.add(choseStorage);
@@ -83,10 +83,10 @@ public class Start implements EntryPoint {
         RootPanel.get("start-bottom-panel").add(initBottomPanel);
     }
 
-    private void setCompanyName(String companyName) {
-        companyName = companyName.trim();
-        if (!companyName.matches("^[0-9a-zA-Z\\.]{1,25}$")) {
-            Window.alert("'" + companyName + "' is not a valid symbol.");
+    private void setCompanyName(String  nameOfCompany) {
+        nameOfCompany = nameOfCompany.trim();
+        if (!nameOfCompany.matches("^[0-9a-zA-Z\\.]{1,25}$")) {
+            Window.alert("'" + nameOfCompany + "' is not a valid symbol.");
             companyNameInput.selectAll();
             return;
         }
@@ -105,7 +105,9 @@ public class Start implements EntryPoint {
 
             @Override
             public void onSuccess(Void avoid) {
-                Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
+                String host = Window.Location.getPath();
+                host = host.substring(0, host.lastIndexOf("/") + 1);
+                Window.Location.replace(host + "simulate.html") ;
             }
         };
         startService.startGenerator(companyName, typeOfStorage, callback);

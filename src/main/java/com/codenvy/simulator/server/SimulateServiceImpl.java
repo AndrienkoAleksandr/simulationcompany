@@ -63,7 +63,6 @@ public class SimulateServiceImpl extends RemoteServiceServlet implements Simulat
             company.setFullName(companyName);
             company.takeEmployeesOnWork();
             company.earnMoney();
-            double totalProfit = company.getProfit();
             company.paySalaryStaff();
             company.setTypeOfSavingData(storage);
             company.saveCompanyToStorage();
@@ -75,7 +74,6 @@ public class SimulateServiceImpl extends RemoteServiceServlet implements Simulat
         try {
             responseJSON.put("employee", employeesJSON);
             responseJSON.put("company", company.toJSON());
-            responseJSON.put("totalProfit", totalProfit);
         } catch (JSONException e) {
             e.printStackTrace();
         }

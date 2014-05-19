@@ -33,11 +33,10 @@ public class Simulate implements EntryPoint {
     private Button sorting = new Button("Sort");
     private SimulateServiceAsync simulateServiceAsync;
     private Label errorLabel = new Label();
-    private String typeOfSorting = Constant.sortingList[1];
+    private String typeOfSorting = Constant.sortingList[2];
 
     private JSONArray employees;
     private JSONObject company;
-    private double totalProfit;
 
     public void onModuleLoad() {
         employeesTable.setText(0, 0, "Employee");
@@ -76,12 +75,11 @@ public class Simulate implements EntryPoint {
         JSONObject dataJSON = value.isObject();
         company = dataJSON.get("company").isObject();
         employees = dataJSON.get("employee").isArray();
-        totalProfit = dataJSON.get("totalProfit").isNumber().doubleValue();
     }
 
     private void drawTopDataOfCompany() {
         companyNameValue.setText(company.get("fullName").isString().stringValue());
-        companyTotalMoneyValue.setText(String.valueOf(totalProfit));
+        companyTotalMoneyValue.setText(String.valueOf(company.get("totalProfit").isNumber().doubleValue()));
         topPanel.add(companyName);
         topPanel.add(companyNameValue);
         topPanel.add(companyTotalMoney);
@@ -152,7 +150,7 @@ public class Simulate implements EntryPoint {
     }
 
     private void drawBottomDataOfCompany() {
-        companyProfitValue.setText(String.valueOf(totalProfit));
+        companyProfitValue.setText(String.valueOf(company.get("profit").isNumber().doubleValue()));
         bottomPanel.add(companyProfit);
         bottomPanel.add(companyProfitValue);
         bottomPanel.add(errorLabel);
