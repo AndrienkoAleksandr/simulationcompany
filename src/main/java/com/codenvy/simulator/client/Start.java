@@ -8,9 +8,12 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.validation.client.impl.PathImpl;
 
 /**
  * Created by Andrienko Aleksander on 28.04.14.
@@ -24,11 +27,11 @@ public class Start implements EntryPoint {
     private Label companyNameLabel = new Label("Enter name company");
     private Label startLabel = new Label("Enter \"Run\" if you want to start simulation.");
     private String companyName = "Adidas";
-    private String typeOfStorage = Constant.storageList[0];
+    private String typeOfStorage = Constant.storageList[2];
     private RadioButton[] radioButtons = new RadioButton[Constant.storageList.length];
     private PushButton startButton;
     private StartServiceAsync startService;
-    private Image startImage =  new Image("/resources/img/run.jpg");
+    private Image startImage =  new Image("resources/img/run.jpg");
 
     public void onModuleLoad() {
         initTopPanel.add(choseStorage);
@@ -83,14 +86,14 @@ public class Start implements EntryPoint {
         RootPanel.get("start-bottom-panel").add(initBottomPanel);
     }
 
-    private void setCompanyName(String companyName) {
-        companyName = companyName.trim();
-        if (!companyName.matches("^[0-9a-zA-Z\\.]{1,25}$")) {
-            Window.alert("'" + companyName + "' is not a valid symbol.");
+    private void setCompanyName(String nameOfCompany) {
+        nameOfCompany = nameOfCompany.trim();
+        if (!nameOfCompany.matches("^[0-9a-zA-Z\\.]{1,25}$")) {
+            Window.alert("'" + nameOfCompany + "' is not a valid symbol.");
             companyNameInput.selectAll();
             return;
         }
-        companyName = companyNameInput.getText();
+        this.companyName = nameOfCompany;
     }
 
     private void sendDateToServer() {
@@ -105,7 +108,9 @@ public class Start implements EntryPoint {
 
             @Override
             public void onSuccess(Void avoid) {
-                Window.Location.replace("/simulate.html?gwt.codesvr=127.0.0.1:9997") ;
+                String host = Window.Location.getPath();
+                host = host.substring(0, host.lastIndexOf("/") + 1);
+                Window.Location.replace(host + "simulate.html") ;
             }
         };
         startService.startGenerator(companyName, typeOfStorage, callback);

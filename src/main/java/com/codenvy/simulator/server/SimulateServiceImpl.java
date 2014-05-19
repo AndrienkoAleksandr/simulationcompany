@@ -68,7 +68,7 @@ public class SimulateServiceImpl extends RemoteServiceServlet implements Simulat
             company.saveEmployeeListToStorage();
 
             companyClient.setFullName(companyName);
-            companyClient.setTotalMoney(company.getProfit());
+            companyClient.setTotalMoney(company.getTotalProfit());
             companyClient.setProfit(company.getProfit());
             companyClient.setTypeOfSavingData(storage);
             companyClient.setId(company.getId());

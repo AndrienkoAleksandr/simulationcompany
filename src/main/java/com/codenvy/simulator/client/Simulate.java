@@ -35,7 +35,7 @@ public class Simulate implements EntryPoint {
     private SimulateServiceAsync simulateServiceAsync;
     private Label errorLabel = new Label();
     private CompanyClient company;
-    private String typeOfSorting = Constant.sortingList[1];
+    private String typeOfSorting = Constant.sortingList[2];
 
     public void onModuleLoad() {
         employeesTable.setText(0, 0, "Employee");

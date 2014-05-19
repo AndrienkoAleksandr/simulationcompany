@@ -5,8 +5,6 @@ import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.generator.RandomGenerator;
 import com.google.inject.Inject;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,6 +28,9 @@ public class Company {
 
     @Column(name = "profit")
     private Double profit;
+
+    @Column(name = "total_profit")
+    private Double totalProfit;
 
     @Column(name = "type_saving_data")
     private String typeOfSavingData;
@@ -88,6 +89,14 @@ public class Company {
         this.profit = profit;
     }
 
+    public Double getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(Double totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
     public String getTypeOfSavingData() {
         return typeOfSavingData;
     }
@@ -126,6 +135,7 @@ public class Company {
     public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
         double earnedMoney = profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        setTotalProfit(earnedMoney);
         setProfit(earnedMoney);
         return earnedMoney;
     }
@@ -147,18 +157,5 @@ public class Company {
             }
             setProfit(getProfit() - salary);
         }
-    }
-
-    public JSONObject toJSON() {
-        JSONObject companyObject = new JSONObject();
-        try {
-            companyObject.put("id", id);
-            companyObject.put("fullName", fullName);
-            companyObject.put("profit", profit);
-            companyObject.put("typeOfSavingData", typeOfSavingData);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return companyObject;
     }
 }
