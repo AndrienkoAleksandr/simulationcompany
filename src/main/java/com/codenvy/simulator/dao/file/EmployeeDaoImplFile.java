@@ -22,7 +22,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
 
     private FileManager fileManager = FileManager.getInstance();
 
-    private Path path = Paths.get(Constant.pathToEmployeeFile);
+    public static Path path = Paths.get(Constant.PATH_TO_EMPLOYEE_FILE);
 
     @Override
     public void saveOrUpdate(Employee employee) {
@@ -44,12 +44,12 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
         Class cl = employee.getClass();
         String dType = cl.getSimpleName();
 
-        String line = "{" + employee.getId() + ", "
-                + employee.getFirstName() + ", "
-                + employee.getSecondName() + ", "
-                + employee.getDataOfBirth() + ", "
-                + employee.getSalary() + ", "
-                + employee.getIdCompany() + ", "
+        String line = "{" + employee.getId() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getFirstName() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getSecondName() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getDataOfBirth() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getSalary() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + employee.getIdCompany() + Constant.FILE_BASE_DATE_SEPARATOR + " "
                 + dType + "}";
         lines.add(line);
         fileManager.writeToFile(path, lines);
@@ -97,13 +97,13 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
             return null;
         }
         int id = getIdFromLine(line);
-        line = line.substring(line.indexOf(","));
+        line = line.substring(line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR));
         int beginLine = 0;
         int endLine = 0;
         String[] employeeParam = new String[5];
-        for(int i = 0; i < 5; i++) {
-            beginLine = line.indexOf(",", endLine);
-            endLine = line.indexOf(",", beginLine + 1);
+        for(int i = 0; i < employeeParam.length; i++) {
+            beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine);
+            endLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, beginLine + 1);
             employeeParam[i] = trim(line.substring(beginLine + 1, endLine));
         }
         String dType = trim(line.substring(endLine + 1 , line.length() - 1));
@@ -115,11 +115,21 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
             employee = new EmployeeWithHourlyWages();
         }
         employee.setId(id);
-        employee.setFirstName(employeeParam[0]);
-        employee.setSecondName(employeeParam[1]);
-        employee.setDataOfBirth(Date.valueOf(employeeParam[2]));
-        employee.setSalary(Double.parseDouble(employeeParam[3]));
-        employee.setIdCompany(Integer.parseInt(employeeParam[4]));
+        if (!employeeParam[0].equals("null")) {
+            employee.setFirstName(employeeParam[0]);
+        }
+        if (!employeeParam[1].equals("null")) {
+            employee.setSecondName(employeeParam[1]);
+        }
+        if (!employeeParam[2].equals("null")) {
+            employee.setDataOfBirth(Date.valueOf(employeeParam[2]));
+        }
+        if (!employeeParam[3].equals("null")) {
+            employee.setSalary(Double.parseDouble(employeeParam[3]));
+        }
+        if (!employeeParam[4].equals("null")) {
+            employee.setIdCompany(Integer.parseInt(employeeParam[4]));
+        }
         return employee;
     }
 
@@ -137,15 +147,10 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
     }
 
     @Override
-    public List<Employee> findEmployeesWithFirstName(String name, int idCompany) {
+    public List<Employee> orderByFirstName(int idCompany) {
         List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
-        List<Employee> employeeList = new ArrayList<Employee>();
-        for (Employee employee: employees) {
-            if (employee.getFirstName().equals(name)) {
-                employeeList.add(employee);
-            }
-        }
-        return employeeList;
+        Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_FIRST_NAME));
+        return employees;
     }
 
     @Override
@@ -156,7 +161,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
     }
 
     @Override
-    public List<Employee> orderBySecondName(int idCompany) {
+    public List<Employee> orderByLastName(int idCompany) {
         List<Employee> employees = getAllEmployeeByIdCompany(idCompany);
         Collections.sort(employees, new ComparatorEmployee(EnumComparatorEmployee.BY_SECOND_NAME));
         return employees;

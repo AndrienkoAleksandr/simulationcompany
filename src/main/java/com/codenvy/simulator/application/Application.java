@@ -23,12 +23,14 @@ public class Application {
 
     private static EmployeeDao employeeDao = null;
     private static CompanyDao companyDao = null;
+    private static String typeOfStorage;
 
     public static void main(String[] args) {
         System.out.println("Create new company with name \"Adidas\"");
         Company company = new Company();
         company.setFullName("Adidas");
         int choice = getUserChoiceOfDataStorage();
+        company.setTypeOfSavingData(typeOfStorage);
         List<Employee> employeeList = company.takeEmployeesOnWork();
         printEmployeeList(employeeList);
         company.earnMoney();
@@ -49,9 +51,9 @@ public class Application {
         System.out.println("List of employee order by salary:");
         printEmployeeList(employeeDao.orderBySalary(company.getId()));
         System.out.println("List of employee order by second name:");
-        printEmployeeList(employeeDao.orderBySecondName(company.getId()));
+        printEmployeeList(employeeDao.orderByLastName(company.getId()));
         System.out.println("Employee with first name Walt");
-        printEmployeeList(employeeDao.findEmployeesWithFirstName("Walt", company.getId()));
+        printEmployeeList(employeeDao.orderByFirstName(company.getId()));
         if (choice == 2) {
             HibernateUtil.stopConnectionProvider();
         }
@@ -90,17 +92,20 @@ public class Application {
                 if (choice == 1) {
                     employeeDao = new EmployeeDaoImplJDBC();
                     companyDao = new CompanyDaoImplJDBC();
+                    typeOfStorage = "JDBC";
                     break;
                 }
                 if (choice == 2) {
                     HibernateUtil.getSessionFactory();
                     employeeDao = new EmployeeDaoImpl();
                     companyDao = new CompanyDaoImpl();
+                    typeOfStorage = "Hibernate";
                     break;
                 }
                 if (choice == 3) {
                     employeeDao = new EmployeeDaoImplFile();
                     companyDao = new CompanyDaoImplFile();
+                    typeOfStorage = "Files";
                     break;
                 }
             } catch (Exception e) {

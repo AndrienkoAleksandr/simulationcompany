@@ -1,6 +1,8 @@
 package com.codenvy.simulator.entity;
 
 import com.codenvy.simulator.constant.Constant;
+import com.codenvy.simulator.dao.CompanyDao;
+import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.generator.RandomGenerator;
 
 import javax.persistence.*;
@@ -20,17 +22,29 @@ public class Company {
     @Column(name = "full_name")
     private String fullName;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "company")
     private List<Employee> employees;
 
     @Column(name = "profit")
     private Double profit;
 
+    @Column(name = "total_profit")
+    private Double totalProfit;
+
+    @Column(name = "type_saving_data")
+    private String typeOfSavingData;
+
     @Transient
     private RandomGenerator generator = new RandomGenerator();
 
-    public Company() {
-    }
+    @Transient
+    private EmployeeDao employeeDao;
+
+    @Transient
+    private CompanyDao companyDao;
+
+    public Company() {}
+
 
     public Integer getId() {
         return id;
@@ -65,16 +79,31 @@ public class Company {
     }
 
     public List<Employee> takeEmployeesOnWork() {
-        System.out.println("Generate personal company");
         int amountOfEmployee = generator.generateAmountOfEmployee();
         System.out.println("Personal company consist of " + amountOfEmployee + " employees");
         return employees = generator.generateListAllEmployees(amountOfEmployee);
     }
-    
+
+    public Double getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(Double totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
+    public String getTypeOfSavingData() {
+        return typeOfSavingData;
+    }
+
+    public void setTypeOfSavingData(String typeOfSavingData) {
+        this.typeOfSavingData = typeOfSavingData;
+    }
 
     public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
         double earnedMoney = profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        setTotalProfit(earnedMoney);
         setProfit(earnedMoney);
         return earnedMoney;
     }

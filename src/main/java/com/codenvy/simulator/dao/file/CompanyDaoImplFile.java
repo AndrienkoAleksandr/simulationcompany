@@ -15,14 +15,17 @@ import static com.sun.org.apache.xerces.internal.util.XMLChar.trim;
  */
 public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
 
-    private FileManager fileManager = FileManager.getInstance();;
+    private FileManager fileManager = FileManager.getInstance();
 
-    private Path path = Paths.get(Constant.pathToCompanyFile);
+    public static Path path = Paths.get(Constant.PATH_TO_COMPANY_FILE);
 
     @Override
     public void saveOrUpdate(Company company) {
         List<String> lines = new ArrayList<String>();
         lines.addAll(fileManager.readFile(path));
+        if (company.getTypeOfSavingData() == null) {
+            throw new IllegalArgumentException("field type_saving_data can't be null!!!");
+        }
         if (company.getId() != null && company.getId() > 0) {
             String lineCompany = findLineForId(company.getId(), lines);
             if (lineCompany != null) {
@@ -33,9 +36,11 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         } else {
             company.setId(generateId(lines));
         }
-        String line = "{" + company.getId() + ", "
-                + company.getFullName() + ", "
-                + company.getProfit() + "}";
+        String line = "{" + company.getId() + Constant.FILE_BASE_DATE_SEPARATOR +" "
+                + company.getFullName() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + company.getProfit() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + company.getTotalProfit() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + company.getTypeOfSavingData() + "}";
         lines.add(line);
         fileManager.writeToFile(path, lines);
     }
@@ -61,8 +66,14 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         if (company.getProfit() != null) {
             companyWithSameId.setProfit(company.getProfit());
         }
+        if (company.getTotalProfit() != null) {
+            companyWithSameId.setTotalProfit(company.getTotalProfit());
+        }
         if (company.getFullName() != null) {
             companyWithSameId.setFullName(company.getFullName());
+        }
+        if (company.getTypeOfSavingData() != null) {
+            companyWithSameId.setTypeOfSavingData(company.getTypeOfSavingData());
         }
         return companyWithSameId;
     }
@@ -70,14 +81,29 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
     private Company generateCompanyFromLine(String line) {
         Company company = new Company();
         company.setId(getIdFromLine(line));
-        int beginLine = line.indexOf(",") + 1;
-        int endLine = line.indexOf(",",beginLine);
-        String name = trim(line.substring(beginLine, endLine)) + 1;
-        company.setFullName(name);
-        beginLine = line.indexOf(",", endLine) + 1;
-        endLine = line.indexOf("}");
-        String profit = trim(line.substring(beginLine, endLine));
-        company.setProfit(Double.parseDouble(profit));
+        line = line.substring(line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR));
+        int beginLine = 0;
+        int endLine = 0;
+        String[] companyParam = new String[4];
+        String separator = String.valueOf(Constant.FILE_BASE_DATE_SEPARATOR);
+        for(int i = 0; i < companyParam.length; i++) {
+            beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine);
+            if (i == companyParam.length - 1) {separator = "}";}
+            endLine = line.indexOf(separator, beginLine + 1);
+            companyParam[i] = trim(line.substring(beginLine + 1, endLine));
+        }
+        if (!companyParam[0].equals("null")) {
+            company.setFullName(companyParam[0]);
+        }
+        if (!companyParam[1].equals("null")) {
+            company.setProfit(Double.parseDouble(companyParam[1]));
+        }
+        if (!companyParam[2].equals("null")) {
+            company.setTotalProfit(Double.parseDouble(companyParam[2]));
+        }
+        if (!companyParam[3].equals("null") ) {
+            company.setTypeOfSavingData(companyParam[3]);
+        }
         return company;
     }
 }

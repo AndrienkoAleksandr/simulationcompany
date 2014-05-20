@@ -35,7 +35,7 @@ public class FileManager {
         return fileManager;
     }
 
-    protected void writeToFile(Path path,List<String> lines) {
+    public void writeToFile(Path path,List<String> lines) {
         try {
             Files.delete(path);
             createFileIfNotExist(path);
@@ -52,7 +52,7 @@ public class FileManager {
         }
     }
 
-    protected List<String> readFile(Path path) {
+    public List<String> readFile(Path path) {
         List<String> result = new ArrayList<String>();
         createFileIfNotExist(path);
         Charset charset = Charset.forName("UTF-8");
@@ -67,7 +67,7 @@ public class FileManager {
         return result;
     }
 
-    protected void createFileIfNotExist(Path path) {
+    public void createFileIfNotExist(Path path) {
         try {
             Path directories = path.getParent();
             if (!Files.exists(directories)) {

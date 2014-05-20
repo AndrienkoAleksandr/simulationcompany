@@ -83,14 +83,13 @@ public class EmployeeDaoImplJDBC  implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> findEmployeesWithFirstName(String name, int idCompany) {
+    public List<Employee> orderByFirstName(int idCompany) {
         Connection connection = DatabaseConnection.getConnection();
-        String sql = "SELECT * FROM Employees WHERE first_name = ? AND Company_id = ?";
+        String sql = "SELECT * FROM Employees WHERE Company_id = ? ORDER BY first_name";
         PreparedStatement statement = null;
         try {
             statement = connection.prepareStatement(sql);
-            statement.setString(1, name);
-            statement.setInt(2, idCompany);
+            statement.setInt(1, idCompany);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -112,7 +111,7 @@ public class EmployeeDaoImplJDBC  implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> orderBySecondName(int idCompany) {
+    public List<Employee> orderByLastName(int idCompany) {
         Connection connection = DatabaseConnection.getConnection();
         String sql = "SELECT * FROM Employees WHERE Company_id = ? ORDER BY second_name";
         PreparedStatement statement = null;

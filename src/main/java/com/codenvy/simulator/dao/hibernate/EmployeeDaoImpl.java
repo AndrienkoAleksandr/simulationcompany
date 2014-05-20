@@ -52,19 +52,20 @@ public class EmployeeDaoImpl implements EmployeeDao {
             if (session != null && session.isOpen()) {
                 session.close();
             }
+            HibernateUtil.stopConnectionProvider();
         }
     }
 
     @Override
-    public List<Employee> findEmployeesWithFirstName(String name, int idCompany) {
+    public List<Employee> orderByFirstName(int idCompany) {
         Session session = null;
         List<Employee> employeeList = null;
         try {
             session = getSession();
             session.beginTransaction();
-            employeeList = session.createQuery("FROM Employee WHERE firstName=:firstName AND idCompany=:idCompany")
-                    .setString("firstName", name)
-                    .setInteger("idCompany", idCompany)
+            employeeList = session.createCriteria(Employee.class)
+                    .addOrder(Order.asc("firstName"))
+                    .add(Expression.like("idCompany", idCompany))
                     .list();
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -100,7 +101,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
     }
 
     @Override
-    public List<Employee> orderBySecondName(int idCompany) {
+    public List<Employee> orderByLastName(int idCompany) {
         Session session = null;
         List<Employee> employeeList = null;
         try {

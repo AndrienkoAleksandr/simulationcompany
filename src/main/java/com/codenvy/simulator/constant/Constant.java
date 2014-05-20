@@ -3,7 +3,7 @@ package com.codenvy.simulator.constant;
 /**
  * Created by Andrienko Aleksander on 16.03.14.
  */
-public abstract class Constant {
+public final class Constant {
 
     /* String */
     public static final String[] FIRST_NAME_LIST = new String[] {"Glori", "Jim", "Carry", "Denis",
@@ -11,14 +11,16 @@ public abstract class Constant {
             "Cris", "Marry", "May", "Iona", "Candy", "Cherry", "Eddy", "Holly"};
 
     public static final String[] SECOND_NAME_LIST = new String[]{"Abramson",
-            "Adamson", "Adderiy", "Addington", "Adrian", "Albertson",
-            "Aldridge", "Allford", "Alsopp", "Anderson", "Andrews",
-            "Archibald", "Arnold", "Arthurs", "Atcheson", "Attwood",
-            "Audley", "Austin", "Ayrton", "Babcock", "Backer"};
+            "Adamson", "Berry", "Eddington", "Osborn", "Mayer",
+            "Eagle", "Beckhem", "Serafim", "Anderson", "Fluffy",
+            "Ruby", "Java", "Cuper", "Unit", "Korn",
+            "Glens", "Tramp", "Donalds", "Babcock", "Backer"};
 
-    public static final String pathToCompanyFile = "storage/company.bin";
+    public static final String PATH_TO_COMPANY_FILE = "storage/company.bin";
 
-    public static final String pathToEmployeeFile = "storage/employee.bin";
+    public static final String PATH_TO_EMPLOYEE_FILE = "storage/employee.bin";
+
+    public static final char FILE_BASE_DATE_SEPARATOR = ',';
 
     /* Integer */
     public static final Integer FIRST_NAME_LIST_LENGTH = FIRST_NAME_LIST.length;
@@ -48,6 +50,4 @@ public abstract class Constant {
     public static final int MIN_MONTH_OF_BIRTH = 1;
 
     public static final int MAX_MONTH_OF_BIRTH = 11;
-
-
 }
