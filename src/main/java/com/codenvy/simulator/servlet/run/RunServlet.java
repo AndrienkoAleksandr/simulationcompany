@@ -1,13 +1,10 @@
 package com.codenvy.simulator.servlet.run;
 
 import com.codenvy.simulator.constant.Constant;
-import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.dao.file.CompanyDaoImplFile;
 import com.codenvy.simulator.dao.file.EmployeeDaoImplFile;
-import com.codenvy.simulator.dao.hibernate.CompanyDaoImplHibernate;
 import com.codenvy.simulator.dao.hibernate.EmployeeDaoImplHibernate;
-import com.codenvy.simulator.dao.jdbc.CompanyDaoImplJDBC;
 import com.codenvy.simulator.dao.jdbc.EmployeeDaoImplJDBC;
 import com.codenvy.simulator.entity.Company;
 import com.codenvy.simulator.entity.Employee;
@@ -15,7 +12,6 @@ import com.codenvy.simulator.module.FileModule;
 import com.codenvy.simulator.module.HibernateModule;
 import com.codenvy.simulator.module.JDBCModule;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import javax.servlet.ServletException;
@@ -105,7 +101,7 @@ public class RunServlet extends HttpServlet {
             }
             company.setFullName(companyName);
             company.takeEmployeesOnWork();
-            request.getSession().setAttribute("earned_money", company.earnMoney());
+            company.earnMoney();
             company.paySalaryStaff();
             company.setTypeOfSavingData(storage);
             company.saveCompanyToStorage();

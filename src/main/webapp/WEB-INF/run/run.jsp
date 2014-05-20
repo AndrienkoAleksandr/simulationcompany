@@ -19,7 +19,7 @@
     <p>Company name:</p>
     ${company.getFullName()}
     <p>Company earned:</p>
-    ${earned_money}
+    ${company.getTotalProfit()}
     <p>Company pay salary to staff:</p>
 </div>
 <div id = "ScrollBlock">
