@@ -26,7 +26,7 @@ public interface CompanyView {
 
     public void setTypeOfSavingData(String typeOfSavingData);
 
-    public Double getTotalMoney();
+    public Double getTotalProfit();
 
     public void setTotalMoney(Double totalMoney);
 }

@@ -101,7 +101,7 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
         int beginLine = 0;
         int endLine = 0;
         String[] employeeParam = new String[5];
-        for(int i = 0; i < 5; i++) {
+        for(int i = 0; i < employeeParam.length; i++) {
             beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine);
             endLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, beginLine + 1);
             employeeParam[i] = trim(line.substring(beginLine + 1, endLine));
@@ -115,11 +115,21 @@ public class EmployeeDaoImplFile extends FileStorage implements EmployeeDao{
             employee = new EmployeeWithHourlyWages();
         }
         employee.setId(id);
-        employee.setFirstName(employeeParam[0]);
-        employee.setSecondName(employeeParam[1]);
-        employee.setDataOfBirth(Date.valueOf(employeeParam[2]));
-        employee.setSalary(Double.parseDouble(employeeParam[3]));
-        employee.setIdCompany(Integer.parseInt(employeeParam[4]));
+        if (!employeeParam[0].equals("null")) {
+            employee.setFirstName(employeeParam[0]);
+        }
+        if (!employeeParam[1].equals("null")) {
+            employee.setSecondName(employeeParam[1]);
+        }
+        if (!employeeParam[2].equals("null")) {
+            employee.setDataOfBirth(Date.valueOf(employeeParam[2]));
+        }
+        if (!employeeParam[3].equals("null")) {
+            employee.setSalary(Double.parseDouble(employeeParam[3]));
+        }
+        if (!employeeParam[4].equals("null")) {
+            employee.setIdCompany(Integer.parseInt(employeeParam[4]));
+        }
         return employee;
     }
 

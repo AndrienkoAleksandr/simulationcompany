@@ -12,7 +12,7 @@ public class CompanyClient implements IsSerializable{
     private Integer id;
     private String fullName;
     private List<EmployeeClient> employees;
-    private Double totalMoney;
+    private Double totalProfit;
     private Double profit;
     private String typeOfSavingData;
 
@@ -56,16 +56,16 @@ public class CompanyClient implements IsSerializable{
         this.typeOfSavingData = typeOfSavingData;
     }
 
-    public Double getTotalMoney() {
-        return totalMoney;
+    public Double getTotalProfit() {
+        return totalProfit;
     }
 
-    public void setTotalMoney(Double totalMoney) {
-        this.totalMoney = totalMoney;
+    public void setTotalProfit(Double totalProfit) {
+        this.totalProfit = totalProfit;
     }
 
     @Override
     public String toString() {
-        return id + " " + fullName + totalMoney + profit + typeOfSavingData;
+        return id + " " + fullName + totalProfit + profit + typeOfSavingData;
     }
 }

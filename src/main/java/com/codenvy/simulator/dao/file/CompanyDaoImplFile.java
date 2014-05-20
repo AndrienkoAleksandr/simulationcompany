@@ -4,6 +4,7 @@ import com.codenvy.simulator.constant.Constant;
 import com.codenvy.simulator.dao.CompanyDao;
 import com.codenvy.simulator.dao.EmployeeDao;
 import com.codenvy.simulator.entity.Company;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         String line = "{" + company.getId() + Constant.FILE_BASE_DATE_SEPARATOR +" "
                 + company.getFullName() + Constant.FILE_BASE_DATE_SEPARATOR + " "
                 + company.getProfit() + Constant.FILE_BASE_DATE_SEPARATOR + " "
+                + company.getTotalProfit() + Constant.FILE_BASE_DATE_SEPARATOR + " "
                 + company.getTypeOfSavingData() + "}";
         lines.add(line);
         fileManager.writeToFile(path, lines);
@@ -77,6 +79,9 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         if (company.getProfit() != null) {
             companyWithSameId.setProfit(company.getProfit());
         }
+        if (company.getTotalProfit() != null) {
+            companyWithSameId.setTotalProfit(company.getTotalProfit());
+        }
         if (company.getFullName() != null) {
             companyWithSameId.setFullName(company.getFullName());
         }
@@ -92,17 +97,26 @@ public class CompanyDaoImplFile extends FileStorage implements CompanyDao{
         line = line.substring(line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR));
         int beginLine = 0;
         int endLine = 0;
-        String[] companyParam = new String[3];
+        String[] companyParam = new String[4];
         String separator = String.valueOf(Constant.FILE_BASE_DATE_SEPARATOR);
-        for(int i = 0; i < 3; i++) {
+        for(int i = 0; i < companyParam.length; i++) {
             beginLine = line.indexOf(Constant.FILE_BASE_DATE_SEPARATOR, endLine);
-            if (i == 2) {separator = "}";}
+            if (i == companyParam.length - 1) {separator = "}";}
             endLine = line.indexOf(separator, beginLine + 1);
             companyParam[i] = trim(line.substring(beginLine + 1, endLine));
         }
-        company.setFullName(companyParam[0]);
-        company.setProfit(Double.parseDouble(companyParam[1]));
-        company.setTypeOfSavingData(companyParam[2]);
+        if (!companyParam[0].equals("null")) {
+            company.setFullName(companyParam[0]);
+        }
+        if (!companyParam[1].equals("null")) {
+            company.setProfit(Double.parseDouble(companyParam[1]));
+        }
+        if (!companyParam[2].equals("null")) {
+            company.setTotalProfit(Double.parseDouble(companyParam[2]));
+        }
+        if (!companyParam[3].equals("null") ) {
+            company.setTypeOfSavingData(companyParam[3]);
+        }
         return company;
     }
 }

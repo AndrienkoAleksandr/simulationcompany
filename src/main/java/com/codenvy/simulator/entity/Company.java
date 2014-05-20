@@ -29,6 +29,9 @@ public class Company {
     @Column(name = "profit")
     private Double profit;
 
+    @Column(name = "total_profit")
+    private Double totalProfit;
+
     @Column(name = "type_saving_data")
     private String typeOfSavingData;
 
@@ -86,6 +89,14 @@ public class Company {
         this.profit = profit;
     }
 
+    public Double getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(Double totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
     public String getTypeOfSavingData() {
         return typeOfSavingData;
     }
@@ -124,6 +135,7 @@ public class Company {
     public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
         double earnedMoney = profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        setTotalProfit(earnedMoney);
         setProfit(earnedMoney);
         return earnedMoney;
     }
