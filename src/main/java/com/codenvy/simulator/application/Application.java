@@ -48,15 +48,15 @@ public class Application {
             System.out.println("Ops, the company had a loss!!!");
         }
         company.saveCompanyToStorage();
-        company.saveEmployeeListToStorage(company.getId());
+        company.saveEmployeeListToStorage();
         System.out.println("Salary:");
         printEmployeeList(employeeList);
         System.out.println("List of employee order by salary:");
         printEmployeeList(employeeDao.orderBySalary(company.getId()));
-        System.out.println("List of employee order by second name:");
-        printEmployeeList(employeeDao.findEmployeeWithSecondName(company.getId()));
-        System.out.println("Employee with first name Walt");
-        printEmployeeList(employeeDao.findEmployeesWithFirstName("Walt", company.getId()));
+        System.out.println("List of employee order by last name:");
+        printEmployeeList(employeeDao.orderByLastName(company.getId()));
+        System.out.println("List of employee order by last first name");
+        printEmployeeList(employeeDao.orderByFirstName(company.getId()));
         if (choice == 2) {
             HibernateUtil.stopConnectionProvider();
         }
@@ -91,6 +91,7 @@ public class Application {
                     companyDao = new CompanyDaoImplJDBC();
                     Injector injector = Guice.createInjector(new JDBCModule());
                     company = injector.getInstance(Company.class);
+                    company.setTypeOfSavingData("JDBC");
                     break;
                 }
                 if (choice == 2) {
@@ -99,6 +100,7 @@ public class Application {
                     companyDao = new CompanyDaoImplHibernate();
                     Injector injector = Guice.createInjector(new HibernateModule());
                     company = injector.getInstance(Company.class);
+                    company.setTypeOfSavingData("Hibernate");
                     break;
                 }
                 if (choice == 3) {
@@ -106,6 +108,7 @@ public class Application {
                     companyDao = new CompanyDaoImplFile();
                     Injector injector = Guice.createInjector(new FileModule());
                     company = injector.getInstance(Company.class);
+                    company.setTypeOfSavingData("Files");
                     break;
                 }
             } catch (Exception e) {

@@ -29,6 +29,12 @@ public class Company {
     @Column(name = "profit")
     private Double profit;
 
+    @Column(name = "total_profit")
+    private Double totalProfit;
+
+    @Column(name = "type_saving_data")
+    private String typeOfSavingData;
+
     @Transient
     private RandomGenerator generator = new RandomGenerator();
 
@@ -80,6 +86,22 @@ public class Company {
         this.profit = profit;
     }
 
+    public Double getTotalProfit() {
+        return totalProfit;
+    }
+
+    public void setTotalProfit(Double totalProfit) {
+        this.totalProfit = totalProfit;
+    }
+
+    public String getTypeOfSavingData() {
+        return typeOfSavingData;
+    }
+
+    public void setTypeOfSavingData(String typeOfSavingData) {
+        this.typeOfSavingData = typeOfSavingData;
+    }
+
     public RandomGenerator getGenerator() {
         return generator;
     }
@@ -89,9 +111,7 @@ public class Company {
     }
 
     public List<Employee> takeEmployeesOnWork() {
-        System.out.println("Generate personal company");
         int amountOfEmployee = generator.generateAmountOfEmployee();
-        System.out.println("Personal company consist of " + amountOfEmployee + " employees");
         employees = generator.generateListAllEmployees(amountOfEmployee);
         return employees;
     }
@@ -100,16 +120,21 @@ public class Company {
         companyDao.saveOrUpdate(this);
     }
 
-    public void saveEmployeeListToStorage(int idCompany) {
-        for (Employee employee: employees) {
-            employee.setIdCompany(idCompany);
-            employeeDao.saveOrUpdate(employee);
+    public void saveEmployeeListToStorage() {
+        if (employees != null) {
+            for (Employee employee: employees) {
+                employee.setIdCompany(id);
+                employeeDao.saveOrUpdate(employee);
+            }
         }
     }
 
     public double earnMoney() {
         RandomGenerator profitGenerator = new RandomGenerator();
-        return profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        double earnedMoney = profitGenerator.generateRandomDoubleNumber(1, Constant.MAX_FIXED_SALARY * employees.size());
+        setTotalProfit(earnedMoney);
+        setProfit(earnedMoney);
+        return earnedMoney;
     }
 
     public void paySalaryStaff() {
