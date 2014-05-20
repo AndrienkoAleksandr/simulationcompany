@@ -34,6 +34,8 @@ public class Simulate implements EntryPoint {
     private FlexTable employeesTable = new FlexTable();
     private Label companyName = new Label("Company name:");
     private Label companyNameValue = new Label();
+    private Label companyTotalMoney = new Label("Company earned:");
+    private Label companyTotalMoneyValue = new Label();
     private Label employeeListLabel = new Label("Company pay salary to staff:");
     private Label companyProfit = new Label("Company profit after payment salary:");
     private Label companyProfitValue = new Label();
@@ -61,8 +63,10 @@ public class Simulate implements EntryPoint {
 
             @Override
             public void onSuccess(Method method, CompanyClient data) {
+                String host = Window.Location.getPath();
+                host = host.substring(0, host.lastIndexOf("/") + 1);
                 if (data == null) {
-                        Window.Location.replace("/error/404.jsp");
+                        Window.Location.replace(host + "error/404.jsp");
                 }
                 company = data;
                 drawTopDataOfCompany();
@@ -81,8 +85,11 @@ public class Simulate implements EntryPoint {
 
     private void drawTopDataOfCompany() {
         companyNameValue.setText(company.getFullName());
+        companyTotalMoneyValue.setText(String.valueOf(company.getTotalProfit()));
         topPanel.add(companyName);
         topPanel.add(companyNameValue);
+        topPanel.add(companyTotalMoney);
+        topPanel.add(companyTotalMoneyValue);
         topPanel.add(employeeListLabel);
     }
 
@@ -134,8 +141,10 @@ public class Simulate implements EntryPoint {
 
             @Override
             public void onSuccess(Method method, List<EmployeeClient> data) {
+                String host = Window.Location.getPath();
+                host = host.substring(0, host.lastIndexOf("/") + 1);
                 if (data == null) {
-                    Window.Location.replace("/error/404.jsp");
+                    Window.Location.replace(host + "error/404.jsp");
                 }
                 company.setEmployees(data);
                 drawEmployeeTable();

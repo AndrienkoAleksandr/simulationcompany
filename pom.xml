@@ -120,7 +120,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <warName>gwtapp</warName>
+                    <warName>jerseygwt</warName>
                     <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
                     <webappDirectory>src/main/webapp</webappDirectory>
                 </configuration>

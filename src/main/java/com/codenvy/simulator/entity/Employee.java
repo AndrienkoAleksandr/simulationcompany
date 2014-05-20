@@ -29,7 +29,7 @@ public abstract class Employee {
     @Column(name = "company_id")
     private Integer idCompany;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="company_id", referencedColumnName="id" ,insertable = false, updatable = false)
     private Company company;
 

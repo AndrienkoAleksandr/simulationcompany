@@ -75,8 +75,9 @@ public class CompanyResources {
             company.saveEmployeeListToStorage();
 
             companyClient.setFullName(companyName);
-            companyClient.setTotalMoney(company.getProfit());
+            companyClient.setTotalProfit(company.getProfit());
             companyClient.setProfit(company.getProfit());
+            companyClient.setTotalProfit(company.getTotalProfit());
             companyClient.setTypeOfSavingData(storage);
             companyClient.setId(company.getId());
         }
@@ -122,6 +123,7 @@ public class CompanyResources {
         companyClient.setId(company.getId());
         companyClient.setFullName(company.getFullName());
         companyClient.setProfit(company.getProfit());
+        companyClient.setTotalProfit(company.getTotalProfit());
         companyClient.setTypeOfSavingData(company.getTypeOfSavingData());
 
 
